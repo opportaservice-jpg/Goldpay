@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Goldpay — Liens de paiement</title>
+
+<meta name="theme-color" content="#0b0d12">
+
+<style>
+:root{
+    --bg:#f5f7fa;
+    --card:#ffffff;
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --black:#0b0d12;
+    --blue:#2563eb;
+    --blue-dark:#1d4ed8;
+    --green:#16a34a;
+    --red:#dc2626;
+    --shadow:0 12px 35px rgba(15,23,42,.08);
+    --radius:18px;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+    height:72px;
+    background:var(--black);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:21px;
+    font-weight:800;
+    letter-spacing:-.4px;
+}
+
+.robot{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#0b0d12;
+    font-size:20px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.merchant-name{
+    color:#d1d5db;
+    font-size:14px;
+}
+
+.logout{
+    border:1px solid #374151;
+    background:#111827;
+    color:#fff;
+    border-radius:10px;
+    padding:9px 14px;
+    font-weight:600;
+}
+
+.logout:hover{
+    background:#1f2937;
+}
+
+/* LAYOUT */
+
+.layout{
+    display:flex;
+    min-height:calc(100vh - 72px);
+}
+
+.sidebar{
+    width:245px;
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:22px 14px;
+}
+
+.nav-title{
+    color:#9ca3af;
+    font-size:11px;
+    text-transform:uppercase;
+    font-weight:800;
+    padding:0 12px 10px;
+    letter-spacing:.08em;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#4b5563;
+    padding:12px 13px;
+    border-radius:11px;
+    font-size:14px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.nav a:hover{
+    background:#f3f4f6;
+    color:#111827;
+}
+
+.nav a.active{
+    background:#eff6ff;
+    color:var(--blue);
+}
+
+.main{
+    flex:1;
+    padding:32px;
+    min-width:0;
+}
+
+.page-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:28px;
+}
+
+.page-title{
+    margin:0;
+    font-size:30px;
+    letter-spacing:-.8px;
+}
+
+.page-subtitle{
+    margin:7px 0 0;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.primary-btn{
+    border:0;
+    background:var(--blue);
+    color:#fff;
+    padding:12px 18px;
+    border-radius:12px;
+    font-weight:750;
+    box-shadow:0 8px 20px rgba(37,99,235,.22);
+}
+
+.primary-btn:hover{
+    background:var(--blue-dark);
+}
+
+/* CARD */
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+}
+
+/* EMPTY */
+
+.empty{
+    padding:65px 25px;
+    text-align:center;
+}
+
+.empty-icon{
+    width:64px;
+    height:64px;
+    margin:0 auto 18px;
+    border-radius:18px;
+    background:#eff6ff;
+    color:var(--blue);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+}
+
+.empty h2{
+    margin:0 0 8px;
+    font-size:20px;
+}
+
+.empty p{
+    color:var(--muted);
+    margin:0 auto 22px;
+    max-width:480px;
+    font-size:14px;
+}
+
+/* LINKS */
+
+.links-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:18px;
+}
+
+.link-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 8px 25px rgba(15,23,42,.05);
+}
+
+.link-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+}
+
+.link-name{
+    margin:0;
+    font-size:18px;
+    font-weight:800;
+}
+
+.status{
+    font-size:11px;
+    font-weight:800;
+    border-radius:999px;
+    padding:6px 9px;
+}
+
+.status.active{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status.inactive{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.link-description{
+    margin:10px 0 15px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+}
+
+.info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.info-box{
+    background:#f8fafc;
+    border-radius:11px;
+    padding:10px;
+}
+
+.info-label{
+    font-size:10px;
+    text-transform:uppercase;
+    color:#9ca3af;
+    font-weight:800;
+}
+
+.info-value{
+    margin-top:4px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.countries{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:15px;
+}
+
+.country{
+    padding:5px 8px;
+    border-radius:8px;
+    background:#eef2ff;
+    color:#3730a3;
+    font-size:11px;
+    font-weight:800;
+}
+
+.public-link{
+    display:flex;
+    gap:7px;
+    margin-bottom:15px;
+}
+
+.public-link input{
+    min-width:0;
+    flex:1;
+    border:1px solid var(--border);
+    background:#f9fafb;
+    border-radius:10px;
+    padding:9px;
+    font-size:11px;
+    color:#4b5563;
+}
+
+.copy-btn{
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:10px;
+    padding:0 12px;
+    font-weight:700;
+    font-size:12px;
+}
+
+.copy-btn:hover{
+    background:#f3f4f6;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+}
+
+.action-btn{
+    flex:1;
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:10px;
+    padding:9px 10px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.action-btn:hover{
+    background:#f8fafc;
+}
+
+.action-btn.danger{
+    color:var(--red);
+}
+
+.action-btn.success{
+    color:var(--green);
+}
+
+/* MODAL */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+}
+
+.modal-overlay.show{
+    display:flex;
+}
+
+.modal{
+    width:100%;
+    max-width:570px;
+    max-height:92vh;
+    overflow:auto;
+    background:#fff;
+    border-radius:22px;
+    box-shadow:0 25px 80px rgba(0,0,0,.25);
+}
+
+.modal-head{
+    padding:22px 24px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-head h2{
+    margin:0;
+    font-size:20px;
+}
+
+.close{
+    width:36px;
+    height:36px;
+    border:0;
+    background:#f3f4f6;
+    border-radius:10px;
+    font-size:20px;
+}
+
+.modal-body{
+    padding:24px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-label{
+    display:block;
+    font-size:13px;
+    font-weight:750;
+    margin-bottom:7px;
+}
+
+.form-label span{
+    color:#ef4444;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    border:1px solid #d1d5db;
+    border-radius:11px;
+    padding:12px 13px;
+    outline:none;
+    background:#fff;
+    color:#111827;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+textarea{
+    min-height:85px;
+    resize:vertical;
+}
+
+.amount-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.amount-option{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:13px;
+    cursor:pointer;
+}
+
+.amount-option.selected{
+    border-color:var(--blue);
+    background:#eff6ff;
+}
+
+.amount-option input{
+    width:auto;
+    margin-right:7px;
+}
+
+.country-options{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+}
+
+.country-option{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px;
+    cursor:pointer;
+}
+
+.country-option input{
+    width:auto;
+}
+
+.form-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:25px;
+}
+
+.secondary-btn{
+    border:1px solid var(--border);
+    background:#fff;
+    color:#374151;
+    padding:11px 17px;
+    border-radius:11px;
+    font-weight:700;
+}
+
+.submit-btn{
+    border:0;
+    background:var(--blue);
+    color:#fff;
+    padding:11px 20px;
+    border-radius:11px;
+    font-weight:750;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#111827;
+    color:#fff;
+    padding:13px 17px;
+    border-radius:12px;
+    box-shadow:0 12px 35px rgba(0,0,0,.2);
+    font-size:13px;
+    font-weight:650;
+    transform:translateY(20px);
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:200;
+    max-width:360px;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.toast.error{
+    background:#991b1b;
+}
+
+.toast.success{
+    background:#166534;
+}
+
+/* MOBILE */
+
+.mobile-nav{
+    display:none;
+}
+
+@media(max-width:850px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .header{
+        padding:0 16px;
+    }
+
+    .merchant-name{
+        display:none;
+    }
+
+    .main{
+        padding:22px 15px 90px;
+    }
+
+    .page-head{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .page-title{
+        font-size:25px;
+    }
+
+    .primary-btn{
+        width:100%;
+    }
+
+    .links-grid{
+        grid-template-columns:1fr;
+    }
+
+    .mobile-nav{
+        display:flex;
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        height:64px;
+        background:#fff;
+        border-top:1px solid var(--border);
+        z-index:50;
+        justify-content:space-around;
+        align-items:center;
+    }
+
+    .mobile-nav a{
+        text-decoration:none;
+        color:#6b7280;
+        font-size:10px;
+        font-weight:700;
+        text-align:center;
+    }
+
+    .mobile-nav a.active{
+        color:var(--blue);
+    }
+
+    .mobile-nav-icon{
+        display:block;
+        font-size:19px;
+        margin-bottom:2px;
+    }
+
+    .info{
+        grid-template-columns:1fr 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="brand">
+        <div class="robot">🤖</div>
+        <span>Goldpay</span>
+    </div>
+
+    <div class="header-right">
+
+        <span class="merchant-name" id="merchantName">
+            Marchand
+        </span>
+
+        <button class="logout" id="logoutBtn">
+            Déconnexion
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="nav-title">
+            Espace marchand
+        </div>
+
+        <nav class="nav">
+
+            <a href="dashboard.html">
+                📊 Tableau de bord
+            </a>
+
+            <a href="payment-links.html" class="active">
+                🔗 Liens de paiement
+            </a>
+
+            <a href="payments.html">
+                💳 Paiements
+            </a>
+
+            <a href="withdrawals.html">
+                ↗ Retraits
+            </a>
+
+            <a href="balances.html">
+                💰 Soldes
+            </a>
+
+            <a href="api.html">
+                🔑 API
+            </a>
+
+            <a href="telegram.html">
+                🤖 Telegram
+            </a>
+
+            <a href="settings.html">
+                ⚙ Paramètres
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+        <div class="page-head">
+
+            <div>
+                <h1 class="page-title">
+                    Liens de paiement
+                </h1>
+
+                <p class="page-subtitle">
+                    Créez des liens de paiement que vos clients peuvent utiliser pour vous payer.
+                </p>
+            </div>
+
+            <button
+                class="primary-btn"
+                id="createBtn"
+            >
+                + Créer un lien
+            </button>
+
+        </div>
+
+
+        <div id="content"></div>
+
+    </main>
+
+</div>
+
+
+<nav class="mobile-nav">
+
+    <a href="dashboard.html">
+        <span class="mobile-nav-icon">📊</span>
+        Accueil
+    </a>
+
+    <a href="payment-links.html" class="active">
+        <span class="mobile-nav-icon">🔗</span>
+        Liens
+    </a>
+
+    <a href="payments.html">
+        <span class="mobile-nav-icon">💳</span>
+        Paiements
+    </a>
+
+    <a href="balances.html">
+        <span class="mobile-nav-icon">💰</span>
+        Solde
+    </a>
+
+    <a href="settings.html">
+        <span class="mobile-nav-icon">⚙</span>
+        Profil
+    </a>
+
+</nav>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal-overlay" id="modal">
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2>
+                Créer un lien de paiement
+            </h2>
+
+            <button
+                class="close"
+                id="closeModal"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="linkForm">
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Nom du lien <span>*</span>
+                    </label>
+
+                    <input
+                        id="name"
+                        type="text"
+                        maxlength="120"
+                        placeholder="Ex : Paiement commande"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Devise
+                    </label>
+
+                    <input
+                        type="text"
+                        value="XOF"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Montant <span>*</span>
+                    </label>
+
+                    <div class="amount-options">
+
+                        <label
+                            class="amount-option selected"
+                            id="freeOption"
+                        >
+
+                            <input
+                                type="radio"
+                                name="amountType"
+                                value="free"
+                                checked
+                            >
+
+                            Montant libre
+
+                        </label>
+
+
+                        <label
+                            class="amount-option"
+                            id="fixedOption"
+                        >
+
+                            <input
+                                type="radio"
+                                name="amountType"
+                                value="fixed"
+                            >
+
+                            Montant fixe
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="form-group"
+                    id="fixedAmountGroup"
+                    style="display:none"
+                >
+
+                    <label class="form-label">
+                        Montant fixe (XOF) <span>*</span>
+                    </label>
+
+                    <input
+                        id="fixedAmount"
+                        type="number"
+                        min="1"
+                        step="1"
+                        placeholder="Ex : 5000"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Pays autorisés <span>*</span>
+                    </label>
+
+                    <div class="country-options">
+
+                        <label class="country-option">
+                            <input
+                                type="checkbox"
+                                value="BF"
+                                class="country-check"
+                            >
+                            🇧🇫 Burkina Faso
+                        </label>
+
+                        <label class="country-option">
+                            <input
+                                type="checkbox"
+                                value="CI"
+                                class="country-check"
+                            >
+                            🇨🇮 Côte d'Ivoire
+                        </label>
+
+                        <label class="country-option">
+                            <input
+                                type="checkbox"
+                                value="TG"
+                                class="country-check"
+                            >
+                            🇹🇬 Togo
+                        </label>
+
+                        <label class="country-option">
+                            <input
+                                type="checkbox"
+                                value="BJ"
+                                class="country-check"
+                            >
+                            🇧🇯 Bénin
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        maxlength="500"
+                        placeholder="Description facultative"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Redirection après paiement
+                    </label>
+
+                    <input
+                        id="successUrl"
+                        type="url"
+                        placeholder="https://votre-site.com/succes"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Redirection après annulation
+                    </label>
+
+                    <input
+                        id="cancelUrl"
+                        type="url"
+                        placeholder="https://votre-site.com/annulation"
+                    >
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelBtn"
+                    >
+                        Annuler
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                        id="submitBtn"
+                    >
+                        Créer le lien
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   GOLDpay — CONFIGURATION
+========================================================= */
+
+const FUNCTION_URL =
+    "https://autcbkafczthxcyjkobf.supabase.co/functions/v1/merchant-payment-links";
+
+const SESSION_KEY = "goldpay_session";
+
+const PUBLIC_PAYMENT_PAGE = "payment.html";
+
+
+/* =========================================================
+   SESSION
+========================================================= */
+
+function getSession(){
+
+    try{
+
+        const session =
+            JSON.parse(
+                localStorage.getItem(SESSION_KEY) || "null"
+            );
+
+        if(
+            !session ||
+            !session.token
+        ){
+
+            window.location.href = "login.html";
+
+            return null;
+        }
+
+        if(
+            session.expires_at &&
+            new Date(session.expires_at) <= new Date()
+        ){
+
+            localStorage.removeItem(SESSION_KEY);
+
+            window.location.href = "login.html";
+
+            return null;
+        }
+
+        return session;
+
+    }catch(error){
+
+        localStorage.removeItem(SESSION_KEY);
+
+        window.locatiion.href = "login.html";
+
+        return null;
+    }
+}
+
+
+const session = getSession();
+
+
+/* =========================================================
+   MERCHANT
+========================================================= */
+
+if(session){
+
+    const merchantName =
+        document.getElementById("merchantName");
+
+    if(
+        session.merchant &&
+        session.merchant.slug
+    ){
+
+        merchantName.textContent =
+            session.merchant.slug;
+
+    }else if(session.merchant){
+
+        merchantName.textContent =
+            session.merchant.email || "Marchand";
+    }
+}
+
+
+/* =========================================================
+   API EDGE FUNCTION
+========================================================= */
+
+async function goldpayApi(
+    action,
+    payload = {}
+){
+
+    const currentSession = getSession();
+
+    if(
+        !currentSession ||
+        !currentSession.token
+    ){
+
+        throw new Error(
+            "Session Goldpay absente"
+        );
+    }
+
+
+    const response =
+        await fetch(
+            FUNCTION_URL,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":
+                        "Bearer " +
+                        currentSession.token
+                },
+
+                body:JSON.stringify({
+                    action,
+                    ...payload
+                })
+            }
+        );
+
+
+    const data =
+        await response
+            .json()
+            .catch(() => ({}));
+
+
+    if(!response.ok){
+
+        throw new Error(
+            data.error ||
+            data.message ||
+            "Erreur serveur"
+        );
+    }
+
+
+    return data;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function showToast(
+    message,
+    type = "success"
+){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.className =
+        "toast show " + type;
+
+    clearTimeout(toastTimer);
+
+    toastTimer =
+        setTimeout(
+            () => {
+                toast.className = "toast";
+            },
+            3500
+        );
+}
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let allLinks = [];
+
+
+/* =========================================================
+   LOAD LINKS
+========================================================= */
+
+async function loadLinks(){
+
+    const content =
+        document.getElementById("content");
+
+
+    content.innerHTML = `
+        <div class="card">
+            <div class="empty">
+                <div class="empty-icon">⏳</div>
+                <h2>Chargement...</h2>
+                <p>Récupération de vos liens de paiement.</p>
+            </div>
+        </div>
+    `;
+
+
+    try{
+
+        const result =
+            await goldpayApi("list");
+
+
+        allLinks =
+            result.links || [];
+
+
+        renderLinks(
+            allLinks
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        content.innerHTML = `
+            <div class="card">
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        ⚠️
+                    </div>
+
+                    <h2>
+                        Impossible de charger les liens
+                    </h2>
+
+                    <p>
+                        ${escapeHtml(error.message)}
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        onclick="loadLinks()"
+                    >
+                        Réessayer
+                    </button>
+
+                </div>
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderLinks(links){
+
+    const content =
+        document.getElementById("content");
+
+
+    if(!links.length){
+
+        content.innerHTML = `
+            <div class="card">
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        🔗
+                    </div>
+
+                    <h2>
+                        Aucun lien de paiement
+                    </h2>
+
+                    <p>
+                        Créez votre premier lien pour permettre
+                        à vos clients de vous payer facilement.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        onclick="openModal()"
+                    >
+                        + Créer mon premier lien
+                    </button>
+
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    content.innerHTML = `
+        <div class="links-grid">
+
+            ${links.map(
+                link => renderLinkCard(link)
+            ).join("")}
+
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   LINK CARD
+========================================================= */
+
+function renderLinkCard(link){
+
+    const publicUrl =
+        new URL(
+            PUBLIC_PAYMENT_PAGE,
+            window.location.href
+        ).href +
+        "?token=" +
+        encodeURIComponent(
+            link.public_token
+        );
+
+
+    const countries =
+        Array.isArray(link.country_codes)
+            ? link.country_codes
+            : [];
+
+
+    const amount =
+        link.amount_type === "fixed"
+            ? Number(link.fixed_amount || 0)
+                .toLocaleString("fr-FR") +
+              " " +
+              escapeHtml(link.currency || "XOF")
+            : "Montant libre";
+
+
+    return `
+
+        <article class="link-card">
+
+            <div class="link-top">
+
+                <h2 class="link-name">
+                    ${escapeHtml(link.name)}
+                </h2>
+
+                <span class="status ${
+                    link.active
+                        ? "active"
+                        : "inactive"
+                }">
+
+                    ${
+                        link.active
+                            ? "Actif"
+                            : "Inactif"
+                    }
+
+                </span>
+
+            </div>
+
+
+            ${
+                link.description
+                    ? `
+                        <p class="link-description">
+                            ${escapeHtml(link.description)}
+                        </p>
+                      `
+                    : ""
+            }
+
+
+            <div class="info">
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Montant
+                    </div>
+
+                    <div class="info-value">
+                        ${amount}
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Devise
+                    </div>
+
+                    <div class="info-value">
+                        ${escapeHtml(
+                            link.currency || "XOF"
+                        )}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="countries">
+
+                ${
+                    countries.map(
+                        country =>
+                            `<span class="country">
+                                ${country}
+                            </span>`
+                    ).join("")
+                }
+
+            </div>
+
+
+            <div class="public-link">
+
+                <input
+                    readonly
+                    value="${escapeAttribute(publicUrl)}"
+                    id="url-${link.id}"
+                >
+
+                <button
+                    class="copy-btn"
+                    onclick="copyLink('${escapeJs(link.id)}')"
+                >
+                    Copier
+                </button>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="action-btn ${
+                        link.active
+                            ? ""
+                            : "success"
+                    }"
+                    onclick="toggleLink(
+                        '${escapeJs(link.id)}',
+                        ${link.active ? "true" : "false"}
+                    )"
+                >
+
+                    ${
+                        link.active
+                            ? "Désactiver"
+                            : "Activer"
+                    }
+
+                </button>
+
+
+                <button
+                    class="action-btn"
+                    onclick="openPublicLink(
+                        '${escapeJs(publicUrl)}'
+                    )"
+                >
+                    Ouvrir
+                </button>
+
+
+                <button
+                    class="action-btn danger"
+                    onclick="deleteLink(
+                        '${escapeJs(link.id)}'
+                    )"
+                >
+                    Supprimer
+                </button>
+
+            </div>
+
+        </article>
+
+    `;
+}
+
+
+/* =========================================================
+   CREATE LINK
+========================================================= */
+
+async function createLink(event){
+
+    event.preventDefault();
+
+
+    const submitBtn =
+        document.getElementById("submitBtn");
+
+
+    const name =
+        document.getElementById("name")
+            .value
+            .trim();
+
+
+    const description =
+        document.getElementById("description")
+            .value
+            .trim();
+
+
+    const successUrl =
+        document.getElementById("successUrl")
+            .value
+            .trim();
+
+
+    const cancelUrl =
+        document.getElementById("cancelUrl")
+            .value
+            .trim();
+
+
+    const type =
+        document.querySelector(
+            'input[name="amountType"]:checked'
+        ).value;
+
+
+    const fixedValue =
+        document.getElementById("fixedAmount")
+            .value;
+
+
+    const selectedCountries =
+        Array.from(
+            document.querySelectorAll(
+                ".country-check:checked"
+            )
+        ).map(
+            checkbox => checkbox.value
+        );
+
+
+    if(!name){
+
+        showToast(
+            "Le nom du lien est obligatoire.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!selectedCountries.length){
+
+        showToast(
+            "Sélectionnez au moins un pays.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(type === "fixed"){
+
+        if(
+            !fixedValue ||
+            Number(fixedValue) <= 0
+        ){
+
+            showToast(
+                "Entrez un montant fixe valide.",
+                "error"
+            );
+
+            return;
+        }
+    }
+
+
+    submitBtn.disabled = true;
+
+    submitBtn.textContent =
+        "Création...";
+
+
+    try{
+
+        const result =
+            await goldpayApi(
+                "create",
+                {
+                    name,
+
+                    description:
+                        description || null,
+
+                    currency:
+                        "XOF",
+
+                    amount_type:
+                        type,
+
+                    fixed_amount:
+                        type === "fixed"
+                            ? Number(fixedValue)
+                            : null,
+
+                    success_url:
+                        successUrl || null,
+
+                    cancel_url:
+                        cancelUrl || null,
+
+                    country_codes:
+                        selectedCountries
+                }
+            );
+
+
+        if(
+            !result.link ||
+            !result.link.public_token
+        ){
+
+            throw new Error(
+                "Le lien n'a pas été créé correctement."
+            );
+        }
+
+
+        closeModal();
+
+
+        showToast(
+            "Lien de paiement créé avec succès."
+        );
+
+
+        await loadLinks();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Impossible de créer le lien.",
+            "error"
+        );
+
+
+    }finally{
+
+        submitBtn.disabled = false;
+
+        submitBtn.textContent =
+            "Créer le lien";
+    }
+
+}
+
+
+/* =========================================================
+   TOGGLE
+========================================================= */
+
+async function toggleLink(
+    id,
+    currentStatus
+){
+
+    try{
+
+        await goldpayApi(
+            "toggle",
+            {
+                id,
+                active: !currentStatus
+            }
+        );
+
+
+        showToast(
+            currentStatus
+                ? "Lien désactivé."
+                : "Lien activé."
+        );
+
+
+        await loadLinks();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Erreur : " +
+            error.message,
+            "error"
+        );
+    }
+
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+async function deleteLink(id){
+
+    const confirmed =
+        confirm(
+            "Voulez-vous vraiment supprimer ce lien de paiement ?"
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    try{
+
+        await goldpayApi(
+            "delete",
+            { id }
+        );
+
+
+        showToast(
+            "Lien supprimé avec succès."
+        );
+
+
+        await loadLinks();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Impossible de supprimer le lien : " +
+            error.message,
+            "error"
+        );
+    }
+
+}
+
+
+/* =========================================================
+   COPY
+========================================================= */
+
+async function copyLink(id){
+
+    const link =
+        allLinks.find(
+            item => item.id === id
+        );
+
+
+    if(!link){
+        return;
+    }
+
+
+    const url =
+        new URL(
+            PUBLIC_PAYMENT_PAGE,
+            window.location.href
+        ).href +
+        "?token=" +
+        encodeURIComponent(
+            link.public_token
+        );
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            url
+        );
+
+
+        showToast(
+            "Lien copié."
+        );
+
+
+    }catch(error){
+
+        const input =
+            document.getElementById(
+                "url-" + id
+            );
+
+
+        input.select();
+
+        document.execCommand("copy");
+
+
+        showToast(
+            "Lien copié."
+        );
+    }
+
+}
+
+
+/* =========================================================
+   OPEN PUBLIC LINK
+========================================================= */
+
+function openPublicLink(url){
+
+    window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(){
+
+    document
+        .getElementById("modal")
+        .classList.add("show");
+
+    document
+        .getElementById("name")
+        .focus();
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById("modal")
+        .classList.remove("show");
+
+    document
+        .getElementById("linkForm")
+        .reset();
+
+
+    document
+        .getElementById("fixedAmountGroup")
+        .style.display = "none";
+
+
+    document
+        .getElementById("freeOption")
+        .classList.add("selected");
+
+
+    document
+        .getElementById("fixedOption")
+        .classList.remove("selected");
+}
+
+
+/* =========================================================
+   AMOUNT TYPE
+========================================================= */
+
+document
+    .querySelectorAll(
+        'input[name="amountType"]'
+    )
+    .forEach(
+        radio => {
+
+            radio.addEventListener(
+                "change",
+                () => {
+
+                    const fixed =
+                        radio.value === "fixed" &&
+                        radio.checked;
+
+
+                    document
+                        .getElementById(
+                            "fixedAmountGroup"
+                        )
+                        .style.display =
+                            fixed
+                                ? "block"
+                                : "none";
+
+
+                    document
+                        .getElementById(
+                            "freeOption"
+                        )
+                        .classList.toggle(
+                            "selected",
+                            !fixed
+                        );
+
+
+                    document
+                        .getElementById(
+                            "fixedOption"
+                        )
+                        .classList.toggle(
+                            "selected",
+                            fixed
+                        );
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+document
+    .getElementById("createBtn")
+    .addEventListener(
+        "click",
+        openModal
+    );
+
+
+document
+    .getElementById("closeModal")
+    .addEventListener(
+        "click",
+        closeModal
+    );
+
+
+document
+    .getElementById("cancelBtn")
+    .addEventListener(
+        "click",
+        closeModal
+    );
+
+
+document
+    .getElementById("linkForm")
+    .addEventListener(
+        "submit",
+        createLink
+    );
+
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                SESSION_KEY
+            );
+
+            sessionStorage.removeItem(
+                "goldpay_merchant_id"
+            );
+
+            window.location.href =
+                "login.html";
+        }
+    );
+
+
+document
+    .getElementById("modal")
+    .addEventListener(
+        "click",
+        event => {
+
+            if(
+                event.target.id === "modal"
+            ){
+
+                closeModal();
+
+            }
+        }
+    );
+
+
+/* =========================================================
+   SECURITY / HTML ESCAPE
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHtml(value);
+}
+
+
+function escapeJs(value){
+
+    return String(value ?? "")
+        .replaceAll("\\","\\\\")
+        .replaceAll("'","\\'")
+        .replaceAll('"','\\"');
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadLinks();
+
+</script>
+
+</body>
+</html>
