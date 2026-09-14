@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Goldpay est une plateforme de paiement destinée aux marchands pour recevoir et gérer leurs paiements."
+  >
+
+  <title>Goldpay 🤖 — Solution de paiement marchand</title>
+
+  <style>
+    :root {
+      --black: #111827;
+      --black-2: #1f2937;
+      --gold: #d4a72c;
+      --gold-dark: #a8790e;
+      --white: #ffffff;
+      --background: #f7f8fa;
+      --text: #111827;
+      --muted: #667085;
+      --border: #e4e7ec;
+      --success: #067647;
+      --focus: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    a,
+    input {
+      font: inherit;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 999;
+      background: white;
+      color: var(--black);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    /* HEADER */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+
+      height: 72px;
+
+      background: rgba(17, 24, 39, 0.97);
+      color: white;
+
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .header-inner {
+      width: min(1180px, 100%);
+      height: 100%;
+      margin: auto;
+      padding: 0 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      text-decoration: none;
+
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .logo-robot {
+      font-size: 25px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #f9fafb;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    nav a:hover {
+      color: #f3c84b;
+    }
+
+    .nav-button {
+      padding: 10px 16px;
+      border-radius: 9px;
+      background: white;
+      color: var(--black);
+    }
+
+    /* HERO */
+
+    .hero {
+      background:
+        radial-gradient(
+          circle at 80% 20%,
+          rgba(212,167,44,.13),
+          transparent 30%
+        ),
+        var(--background);
+
+      padding: 85px 20px 75px;
+    }
+
+    .hero-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 8px 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      background: white;
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    h1 {
+      margin: 20px 0;
+
+      font-size: clamp(40px, 6vw, 68px);
+      line-height: 1.04;
+      letter-spacing: -2px;
+    }
+
+    h1 span {
+      color: var(--gold-dark);
+    }
+
+    .hero-text {
+      max-width: 650px;
+
+      color: var(--muted);
+
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 50px;
+
+      padding: 13px 21px;
+
+      border-radius: 11px;
+
+      text-decoration: none;
+
+      font-weight: 800;
+      font-size: 15px;
+
+      transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      background: var(--black);
+      color: white;
+
+      box-shadow: 0 8px 20px rgba(17,24,39,.15);
+    }
+
+    .button-gold {
+      background: var(--gold);
+      color: #17120a;
+    }
+
+    .button-light {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--black);
+    }
+
+    .hero-note {
+      margin-top: 18px;
+
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ROBOT */
+
+    .robot-box {
+      min-height: 410px;
+
+      border-radius: 30px;
+
+      background: var(--black);
+
+      color: white;
+
+      padding: 35px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.15);
+    }
+
+    .robot {
+      width: 170px;
+      height: 170px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 50%;
+
+      background: white;
+
+      font-size: 105px;
+
+      margin-bottom: 25px;
+    }
+
+    .robot-box h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .robot-box p {
+      margin: 0;
+      color: #d0d5dd;
+    }
+
+    /* TRUST */
+
+    .trust {
+      background: white;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+
+      padding: 25px 20px;
+    }
+
+    .trust-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .trust-item {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .trust-number {
+      display: block;
+
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .trust-label {
+      display: block;
+
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* SECTIONS */
+
+    section.content {
+      width: min(1180px, 100%);
+      margin: auto;
+      padding: 90px 20px;
+    }
+
+    .section-heading {
+      max-width: 650px;
+      margin-bottom: 40px;
+    }
+
+    .section-heading h2 {
+      margin: 0 0 12px;
+
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.15;
+    }
+
+    .section-heading p {
+      margin: 0;
+
+      color: var(--muted);
+    }
+
+    /* FEATURES */
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .feature {
+      background: white;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      padding: 27px;
+
+      box-shadow: 0 8px 25px rgba(0,0,0,.03);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+
+      display: grid;
+      place-items: center;
+
+      margin-bottom: 18px;
+
+      border-radius: 12px;
+
+      background: #f2f4f7;
+
+      font-size: 23px;
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+
+      font-size: 19px;
+    }
+
+    .feature p {
+      margin: 0;
+
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* HOW IT WORKS */
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .step {
+      position: relative;
+
+      background: white;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      padding: 28px;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 50%;
+
+      background: var(--black);
+      color: white;
+
+      font-weight: 900;
+
+      margin-bottom: 18px;
+    }
+
+    .step h3 {
+      margin: 0 0 8px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* COUNTRIES */
+
+    .countries {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .country {
+      background: white;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      padding: 20px;
+
+      text-align: center;
+
+      font-weight: 800;
+    }
+
+    .country small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* CTA */
+
+    .final-cta {
+      background: var(--black);
+      color: white;
+
+      border-radius: 25px;
+
+      padding: 55px 35px;
+
+      text-align: center;
+    }
+
+    .final-cta h2 {
+      margin: 0 0 12px;
+
+      font-size: clamp(30px, 5vw, 45px);
+    }
+
+    .final-cta p {
+      max-width: 650px;
+      margin: 0 auto;
+
+      color: #d0d5dd;
+    }
+
+    .final-cta .cta-group {
+      justify-content: center;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: #0b0f19;
+      color: #d0d5dd;
+
+      padding: 35px 20px;
+    }
+
+    .footer-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-brand {
+      font-weight: 900;
+      color: white;
+    }
+
+    footer p {
+      margin: 0;
+
+      font-size: 13px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 850px) {
+
+      header {
+        height: auto;
+      }
+
+      .header-inner {
+        min-height: 70px;
+      }
+
+      nav a:not(.nav-button) {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 55px;
+      }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .robot-box {
+        min-height: 330px;
+      }
+
+      .trust-inner {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .features,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .countries {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      section.content {
+        padding: 65px 20px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      h1 {
+        letter-spacing: -1px;
+      }
+
+      .cta-group {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .trust-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .countries {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      .button {
+        transition: none;
+      }
+
+      .button:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a
+    href="#main-content"
+    class="skip-link"
+  >
+    Aller directement au contenu
+  </a>
+
+
+  <!-- HEADER -->
+
+  <header>
+
+    <div class="header-inner">
+
+      <a
+        href="index.html"
+        class="logo"
+        aria-label="Goldpay, accueil"
+      >
+        GOLDPAY
+        <span
+          class="logo-robot"
+          aria-hidden="true"
+        >🤖</span>
+      </a>
+
+
+      <nav aria-label="Navigation principale">
+
+        <a href="#fonctionnalites">
+          Fonctionnalités
+        </a>
+
+        <a href="#fonctionnement">
+          Comment ça marche
+        </a>
+
+        <a href="#pays">
+          Pays
+        </a>
+
+        <a
+          href="login.html"
+          class="nav-button"
+        >
+          Se connecter
+        </a>
+
+      </nav>
+
+    </div>
+
+  </header>
+
+
+  <main id="main-content">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <div class="hero-inner">
+
+
+        <div>
+
+          <div
+            class="eyebrow"
+            role="status"
+          >
+            <span
+              class="eyebrow-dot"
+              aria-hidden="true"
+            ></span>
+
+            Solution de paiement pour marchands
+          </div>
+
+
+          <h1>
+            Développez votre activité avec
+            <span>Goldpay.</span>
+          </h1>
+
+
+          <p class="hero-text">
+            Une plateforme pensée pour les marchands qui souhaitent
+            recevoir des paiements, créer des liens de paiement et
+            suivre leurs opérations depuis un espace unique.
+          </p>
+
+
+          <div class="cta-group">
+
+            <a
+              href="signup.html"
+              class="button button-primary"
+            >
+              Créer mon compte marchand
+            </a>
+
+            <a
+              href="#fonctionnement"
+              class="button button-light"
+            >
+              Découvrir Goldpay
+            </a>
+
+          </div>
+
+
+          <p class="hero-note">
+            Inscription simple · Gestion centralisée · Notifications
+            Telegram
+          </p>
+
+        </div>
+
+
+        <!-- ROBOT -->
+
+        <div
+          class="robot-box"
+          aria-label="Présentation de l'assistant Goldpay"
+        >
+
+          <div
+            class="robot"
+            aria-hidden="true"
+          >
+            🤖
+          </div>
+
+          <h2>
+            Goldpay
+          </h2>
+
+          <p>
+            Votre espace marchand pour gérer vos paiements
+            simplement.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- TRUST -->
+
+    <section
+      class="trust"
+      aria-label="Informations de confiance"
+    >
+
+      <div class="trust-inner">
+
+        <div class="trust-item">
+          <span class="trust-number">
+            4
+          </span>
+
+          <span class="trust-label">
+            pays disponibles
+          </span>
+        </div>
+
+
+        <div class="trust-item">
+          <span class="trust-number">
+            XOF
+          </span>
+
+          <span class="trust-label">
+            monnaie de référence
+          </span>
+        </div>
+
+
+        <div class="trust-item">
+          <span class="trust-number">
+            24/7
+          </span>
+
+          <span class="trust-label">
+            accès à votre espace
+          </span>
+        </div>
+
+
+        <div class="trust-item">
+          <span class="trust-number">
+            🔐
+          </span>
+
+          <span class="trust-label">
+            accès marchand protégé
+          </span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FONCTIONNALITÉS -->
+
+    <section
+      class="content"
+      id="fonctionnalites"
+    >
+
+      <div class="section-heading">
+
+        <h2>
+          Tout ce dont votre activité a besoin.
+        </h2>
+
+        <p>
+          Goldpay centralise les principales opérations de paiement
+          dans un espace conçu pour les marchands.
+        </p>
+
+      </div>
+
+
+      <div class="features">
+
+
+        <article class="feature">
+
+          <div
+            class="feature-icon"
+            aria-hidden="true"
+          >
+            💳
+          </div>
+
+          <h3>
+            Recevez des paiements
+          </h3>
+
+          <p>
+            Proposez à vos clients une expérience de paiement simple
+            à travers vos liens de paiement.
+          </p>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div
+            class="feature-icon"
+            aria-hidden="true"
+          >
+            🔗
+          </div>
+
+          <h3>
+            Créez vos liens
+          </h3>
+
+          <p>
+            Créez des liens avec un montant fixe ou laissez votre
+            client saisir librement le montant.
+          </p>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div
+            class="feature-icon"
+            aria-hidden="true"
+          >
+            📊
+          </div>
+
+          <h3>
+            Suivez vos opérations
+          </h3>
+
+          <p>
+            Consultez vos paiements, retraits et soldes depuis votre
+            tableau de bord marchand.
+          </p>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div
+            class="feature-icon"
+            aria-hidden="true"
+          >
+            🌍
+          </div>
+
+          <h3>
+            Plusieurs pays
+          </h3>
+
+          <p>
+            Gérez vos activités dans les pays pris en charge par
+            Goldpay, avec des soldes séparés par pays.
+          </p>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div
+            class="feature-icon"
+            aria-hidden="true"
+          >
+            🤖
+          </div>
+
+          <h3>
+            Notifications Telegram
+          </h3>
+
+          <p>
+            Recevez les informations importantes de votre compte
+            marchand dans votre groupe Telegram privé.
+          </p>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div
+            class="feature-icon"
+            aria-hidden="true"
+          >
+            🔐
+          </div>
+
+          <h3>
+            Accès sécurisé
+          </h3>
+
+          <p>
+            La connexion marchand utilise un CAPTCHA et une
+            vérification supplémentaire par code Telegram.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- FONCTIONNEMENT -->
+
+    <section
+      class="content"
+      id="fonctionnement"
+    >
+
+      <div class="section-heading">
+
+        <h2>
+          Commencer avec Goldpay est simple.
+        </h2>
+
+        <p>
+          Quelques étapes suffisent pour mettre votre espace marchand
+          en place.
+        </p>
+
+      </div>
+
+
+      <div class="steps">
+
+
+        <article class="step">
+
+          <div class="step-number">
+            1
+          </div>
+
+          <h3>
+            Créez votre compte
+          </h3>
+
+          <p>
+            Renseignez votre identifiant marchand, votre email et
+            votre mot de passe.
+          </p>
+
+        </article>
+
+
+        <article class="step">
+
+          <div class="step-number">
+            2
+          </div>
+
+          <h3>
+            Configurez votre espace
+          </h3>
+
+          <p>
+            Reliez votre groupe Telegram et configurez les éléments
+            nécessaires à votre activité.
+          </p>
+
+        </article>
+
+
+        <article class="step">
+
+          <div class="step-number">
+            3
+          </div>
+
+          <h3>
+            Recevez vos paiements
+          </h3>
+
+          <p>
+            Créez vos liens et partagez-les avec vos clients pour
+            commencer à recevoir des paiements.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- PAYS -->
+
+    <section
+      class="content"
+      id="pays"
+    >
+
+      <div class="section-heading">
+
+        <h2>
+          Une plateforme pensée pour l'Afrique de l'Ouest.
+        </h2>
+
+        <p>
+          Goldpay prend en charge quatre marchés avec une gestion
+          distincte des soldes par pays.
+        </p>
+
+      </div>
+
+
+      <div class="countries">
+
+        <div class="country">
+          Burkina Faso
+          <small>BF · XOF</small>
+        </div>
+
+        <div class="country">
+          Côte d’Ivoire
+          <small>CI · XOF</small>
+        </div>
+
+        <div class="country">
+          Togo
+          <small>TG · XOF</small>
+        </div>
+
+        <div class="country">
+          Bénin
+          <small>BJ · XOF</small>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CTA FINAL -->
+
+    <section class="content">
+
+      <div class="final-cta">
+
+        <h2>
+          Prêt à commencer ?
+        </h2>
+
+        <p>
+          Créez votre compte marchand Goldpay et commencez à
+          construire votre espace de paiement.
+        </p>
+
+
+        <div class="cta-group">
+
+          <a
+            href="signup.html"
+            class="button button-gold"
+          >
+            Commencer maintenant
+          </a>
+
+          <a
+            href="login.html"
+            class="button button-light"
+          >
+            J’ai déjà un compte
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        GOLDPAY 🤖
+      </div>
+
+      <p>
+        © 2026 Goldpay. Tous droits réservés.
+      </p>
+
+    </div>
+
+  </footer>
+
+</body>
+  </html>
