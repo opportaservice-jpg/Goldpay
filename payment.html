@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goldpay — Paiement</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f5f7fa;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111827;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    .brand {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      color: #111827;
+      margin: 10px 0 25px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .merchant-name {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .description {
+      text-align: center;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      height: 52px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      padding: 0 14px;
+      font-size: 16px;
+      outline: none;
+      background: #fff;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: #111827;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .amount-box {
+      position: relative;
+    }
+
+    .amount-box input {
+      padding-right: 70px;
+    }
+
+    .currency {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    .country-info {
+      margin-top: 8px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .pay-button {
+      width: 100%;
+      height: 54px;
+      border: 0;
+      border-radius: 13px;
+      background: #111827;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .pay-button:hover {
+      opacity: .92;
+    }
+
+    .pay-button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 18px;
+      padding: 13px 14px;
+      border-radius: 11px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .message.error {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      display: block;
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #6b7280;
+      margin: 18px 0 0;
+      font-size: 14px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 22px;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="brand">Goldpay</div>
+
+  <div class="card">
+
+    <div id="message" class="message"></div>
+
+    <div id="content" class="hidden">
+
+      <div id="merchantName" class="merchant-name">
+        Paiement
+      </div>
+
+      <div id="description" class="description"></div>
+
+      <div class="field">
+        <label class="label" for="country">
+          Pays
+        </label>
+
+        <select id="country"></select>
+
+        <div id="countryInfo" class="country-info"></div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="amount">
+          Montant
+        </label>
+
+        <div class="amount-box">
+          <input
+            id="amount"
+            type="number"
+            min="500"
+            step="1"
+            inputmode="numeric"
+            placeholder="Ex. 5000"
+          >
+
+          <span class="currency">XOF</span>
+        </div>
+      </div>
+
+      <button id="payButton" class="pay-button" type="button">
+        Continuer vers le paiement
+      </button>
+
+      <div id="loading" class="loading">
+        Redirection vers le paiement sécurisé...
+      </div>
+
+    </div>
+
+    <div id="initialLoading" class="loading" style="display:block;">
+      Chargement du paiement...
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Paiement sécurisé par Goldpay
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   GOLDPAY — PUBLIC PAYMENT LINK
+   ========================================================= */
+
+const API_URL =
+  "https://autcbkafczthxcyjkobf.supabase.co/functions/v1/public-payment-link";
+
+const params = new URLSearchParams(window.location.search);
+const token = (params.get("token") || "").trim();
+
+const messageEl = document.getElementById("message");
+const contentEl = document.getElementById("content");
+const initialLoadingEl = document.getElementById("initialLoading");
+
+const merchantNameEl = document.getElementById("merchantName");
+const descriptionEl = document.getElementById("description");
+
+const countryEl = document.getElementById("country");
+const countryInfoEl = document.getElementById("countryInfo");
+
+const amountEl = document.getElementById("amount");
+const payButton = document.getElementById("payButton");
+const loadingEl = document.getElementById("loading");
+
+let paymentLink = null;
+
+/* =========================================================
+   AFFICHAGE DES MESSAGES
+   ========================================================= */
+
+function showError(message) {
+  messageEl.className = "message error";
+  messageEl.textContent = message;
+  messageEl.style.display = "block";
+}
+
+function showSuccess(message) {
+  messageEl.className = "message success";
+  messageEl.textContent = message;
+  messageEl.style.display = "block";
+}
+
+function clearMessage() {
+  messageEl.className = "message";
+  messageEl.textContent = "";
+  messageEl.style.display = "none";
+}
+
+/* =========================================================
+   REQUÊTE API GOLDPAY
+   ========================================================= */
+
+async function callPaymentAPI(body) {
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  });
+
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch (e) {
+    throw new Error(
+      "Le serveur a retourné une réponse invalide."
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      data && data.error
+        ? data.error
+        : "Erreur lors de la communication avec Goldpay."
+    );
+  }
+
+  return data;
+}
+
+/* =========================================================
+   CHARGEMENT DU LIEN
+   ========================================================= */
+
+async function loadPaymentLink() {
+
+  if (!token) {
+    initialLoadingEl.style.display = "none";
+    showError("Lien de paiement invalide : token manquant.");
+    return;
+  }
+
+  if (token.length < 32 || token.length > 128) {
+    initialLoadingEl.style.display = "none";
+    showError("Lien de paiement invalide.");
+    return;
+  }
+
+  try {
+
+    const data = await callPaymentAPI({
+      token: token
+    });
+
+    if (!data || !data.success || !data.link) {
+      throw new Error(
+        "Impossible de charger ce lien de paiement."
+      );
+    }
+
+    paymentLink = data.link;
+
+    merchantNameEl.textContent =
+      paymentLink.name || "Paiement";
+
+    if (paymentLink.description) {
+      descriptionEl.textContent =
+        paymentLink.description;
+    } else {
+      descriptionEl.textContent =
+        "Effectuez votre paiement en toute sécurité.";
+    }
+
+    /* -----------------------------------------------------
+       PAYS AUTORISÉS
+       ----------------------------------------------------- */
+
+    const countryCodes =
+      Array.isArray(paymentLink.country_codes)
+        ? paymentLink.country_codes
+        : [];
+
+    if (!countryCodes.length) {
+      throw new Error(
+        "Aucun pays n'est autorisé pour ce lien."
+      );
+    }
+
+    countryEl.innerHTML = "";
+
+    const countryNames = {
+      BF: "Burkina Faso",
+      BJ: "Benin",
+      CI: "Cote d'Ivoire",
+      TG: "Togo"
+    };
+
+    const dialCodes = {
+      BF: "+226",
+      BJ: "+229",
+      CI: "+225",
+      TG: "+228"
+    };
+
+    countryCodes.forEach(code => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = code;
+
+      option.textContent =
+        (countryNames[code] || code) +
+        " (" +
+        (dialCodes[code] || "") +
+        ")";
+
+      countryEl.appendChild(option);
+    });
+
+    updateCountryInfo();
+
+    /* -----------------------------------------------------
+       MONTANT
+       ----------------------------------------------------- */
+
+    if (paymentLink.amount_type === "fixed") {
+
+      amountEl.value =
+        Number(paymentLink.fixed_amount);
+
+      amountEl.readOnly = true;
+
+    } else {
+
+      amountEl.value = "";
+      amountEl.readOnly = false;
+
+    }
+
+    initialLoadingEl.style.display = "none";
+    contentEl.classList.remove("hidden");
+
+  } catch (error) {
+
+    initialLoadingEl.style.display = "none";
+
+    console.error(
+      "Goldpay public payment error:",
+      error
+    );
+
+    showError(
+      error.message ||
+      "Impossible de charger le paiement."
+    );
+  }
+}
+
+/* =========================================================
+   INFORMATIONS PAYS
+   ========================================================= */
+
+function updateCountryInfo() {
+
+  const code = countryEl.value;
+
+  const info = {
+    BF: "Paiement disponible au Burkina Faso.",
+    BJ: "Paiement disponible au Benin.",
+    CI: "Paiement disponible en Cote d'Ivoire.",
+    TG: "Paiement disponible au Togo."
+  };
+
+  countryInfoEl.textContent =
+    info[code] || "";
+}
+
+/* =========================================================
+   CLIC SUR PAIEMENT
+   ========================================================= */
+
+async function startPayment() {
+
+  clearMessage();
+
+  if (!paymentLink) {
+    showError(
+      "Le lien de paiement n'est pas encore chargé."
+    );
+    return;
+  }
+
+  const countryCode =
+    countryEl.value.trim().toUpperCase();
+
+  if (!countryCode) {
+    showError(
+      "Veuillez sélectionner votre pays."
+    );
+    return;
+  }
+
+  const amount =
+    Number(amountEl.value);
+
+  if (
+    !Number.isSafeInteger(amount) ||
+    amount < 500
+  ) {
+    showError(
+      "Le montant doit être un nombre entier d'au moins 500 XOF."
+    );
+
+    amountEl.focus();
+    return;
+  }
+
+  /* Évite plusieurs clics */
+  payButton.disabled = true;
+  payButton.textContent = "Préparation du paiement...";
+  loadingEl.style.display = "block";
+
+  try {
+
+    /*
+      IMPORTANT :
+      On réutilise la fonction EXISTANTE
+      public-payment-link.
+
+      Aucune clé WestPay n'est exposée ici.
+    */
+
+    const data = await callPaymentAPI({
+      token: token,
+      country_code: countryCode,
+      amount: amount
+    });
+
+    console.log(
+      "Réponse Goldpay:",
+      data
+    );
+
+    if (
+      !data ||
+      !data.success ||
+      !data.checkout
+    ) {
+      throw new Error(
+        "Goldpay n'a pas fourni de page de paiement."
+      );
+    }
+
+    /*
+      WestPay fournit deux banques.
+      Goldpay utilise recommended_url en priorité.
+    */
+
+    const checkoutUrl =
+      data.checkout.recommended_url ||
+      data.checkout.bank1_url ||
+      data.checkout.bank2_url;
+
+    if (
+      !checkoutUrl ||
+      typeof checkoutUrl !== "string"
+    ) {
+      throw new Error(
+        "URL de paiement WestPay introuvable."
+      );
+    }
+
+    /*
+      Vérification de sécurité :
+      on ne redirige que vers les domaines
+      WestPay attendus.
+    */
+
+    let parsedUrl;
+
+    try {
+      parsedUrl =
+        new URL(checkoutUrl);
+    } catch (e) {
+      throw new Error(
+        "URL de paiement invalide."
+      );
+    }
+
+    const allowedHosts = [
+      "checkout1.westpay.cfd",
+      "payment.bank2.westpay.cfd"
+    ];
+
+    if (!allowedHosts.includes(parsedUrl.hostname)) {
+      throw new Error(
+        "Destination de paiement non autorisée."
+      );
+    }
+
+    showSuccess(
+      "Redirection vers le paiement sécurisé..."
+    );
+
+    /*
+      Petite pause pour que le message soit visible,
+      puis redirection réelle vers WestPay.
+    */
+
+    setTimeout(() => {
+      window.location.assign(
+        checkoutUrl
+      );
+    }, 250);
+
+  } catch (error) {
+
+    console.error(
+      "Erreur paiement:",
+      error
+    );
+
+    showError(
+      error.message ||
+      "Impossible de démarrer le paiement."
+    );
+
+    payButton.disabled = false;
+    payButton.textContent =
+      "Continuer vers le paiement";
+
+    loadingEl.style.display = "none";
+  }
+}
+
+/* =========================================================
+   ÉVÉNEMENTS
+   ========================================================= */
+
+countryEl.addEventListener(
+  "change",
+  updateCountryInfo
+);
+
+payButton.addEventListener(
+  "click",
+  startPayment
+);
+
+amountEl.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      startPayment();
+    }
+
+  }
+);
+
+/* =========================================================
+   DÉMARRAGE
+   ========================================================= */
+
+loadPaymentLink();
+
+</script>
+
+</body>
+  </html>
