@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Paiement - Goldpay</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f8;
+    color: #111827;
+    min-height: 100vh;
+}
+
+.page {
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
+    padding: 25px 16px 40px;
+}
+
+.brand {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.brand-name {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.brand-subtitle {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.07);
+}
+
+.merchant-label {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.merchant-name {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.description {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+
+.section {
+    margin-top: 18px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+input,
+select {
+    width: 100%;
+    height: 52px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    background: #fff;
+    padding: 0 14px;
+    font-size: 17px;
+    color: #111827;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17,24,39,.08);
+}
+
+.amount-wrapper {
+    position: relative;
+}
+
+.amount-wrapper input {
+    padding-right: 65px;
+    font-weight: 700;
+}
+
+.currency {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    font-weight: 800;
+    color: #6b7280;
+    pointer-events: none;
+}
+
+.country-single {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.country-name {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.country-info {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.help {
+    margin-top: 7px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.message {
+    display: none;
+    padding: 13px 14px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.message.error {
+    display: block;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.message.success {
+    display: block;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+
+.pay-button {
+    width: 100%;
+    height: 54px;
+    margin-top: 24px;
+    border: none;
+    border-radius: 13px;
+    background: #111827;
+    color: white;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.pay-button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin-top: 14px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.loader {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-top-color: #111827;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 7px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.security {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.initial-loading {
+    text-align: center;
+    padding: 45px 10px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.content {
+    display: none;
+}
+
+.fixed-amount {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.hidden {
+    display: none !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="brand">
+        <div class="brand-name">Goldpay</div>
+        <div class="brand-subtitle">Paiement sécurisé</div>
+    </div>
+
+    <div id="initialLoading" class="initial-loading">
+        Chargement du paiement...
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div id="content" class="content">
+
+        <div class="card">
+
+            <div class="merchant-label">
+                Paiement à
+            </div>
+
+            <div id="merchantName" class="merchant-name">
+                -
+            </div>
+
+            <div id="description" class="description"></div>
+
+            <div id="singleCountryField" class="section hidden">
+
+                <label>Pays</label>
+
+                <div class="country-single">
+
+                    <div id="singleCountryName" class="country-name">
+                        -
+                    </div>
+
+                    <div id="singleCountryInfo" class="country-info">
+                        -
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="countryField" class="section hidden">
+
+                <label for="country">
+                    Pays
+                </label>
+
+                <select id="country"></select>
+
+            </div>
+
+            <div id="freeAmountField" class="section hidden">
+
+                <label for="amount">
+                    Montant
+                </label>
+
+                <div class="amount-wrapper">
+
+                    <input
+                        id="amount"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        placeholder="Ex. 5000"
+                        maxlength="12"
+                    >
+
+                    <span class="currency">
+                        XOF
+                    </span>
+
+                </div>
+
+                <div class="help">
+                    Montant minimum : 500 XOF
+                </div>
+
+            </div>
+
+            <div id="fixedAmountField" class="section hidden">
+
+                <label>
+                    Montant
+                </label>
+
+                <div id="fixedAmount" class="fixed-amount">
+                    -
+                </div>
+
+            </div>
+
+            <button
+                id="payButton"
+                class="pay-button"
+                type="button"
+            >
+                Continuer vers le paiement
+            </button>
+
+            <div id="loading" class="loading">
+
+                <span class="loader"></span>
+
+                Préparation du paiement...
+
+            </div>
+
+            <div class="security">
+                Le paiement sera effectué sur une page sécurisée.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+"use strict";
+
+const API_URL =
+"https://autcbkafczthxcyjkobf.supabase.co/functions/v1/public-payment-link";
+
+const COUNTRY_DATA = {
+
+    BF: {
+        name: "Burkina Faso",
+        dial: "+226",
+        currency: "XOF"
+    },
+
+    BJ: {
+        name: "Benin",
+        dial: "+229",
+        currency: "XOF"
+    },
+
+    CI: {
+        name: "Cote d'Ivoire",
+        dial: "+225",
+        currency: "XOF"
+    },
+
+    TG: {
+        name: "Togo",
+        dial: "+228",
+        currency: "XOF"
+    }
+
+};
+
+const initialLoading =
+document.getElementById("initialLoading");
+
+const message =
+document.getElementById("message");
+
+const content =
+document.getElementById("content");
+
+const merchantName =
+document.getElementById("merchantName");
+
+const description =
+document.getElementById("description");
+
+const countryField =
+document.getElementById("countryField");
+
+const countrySelect =
+document.getElementById("country");
+
+const singleCountryField =
+document.getElementById("singleCountryField");
+
+const singleCountryName =
+document.getElementById("singleCountryName");
+
+const singleCountryInfo =
+document.getElementById("singleCountryInfo");
+
+const freeAmountField =
+document.getElementById("freeAmountField");
+
+const fixedAmountField =
+document.getElementById("fixedAmountField");
+
+const amountInput =
+document.getElementById("amount");
+
+const fixedAmount =
+document.getElementById("fixedAmount");
+
+const payButton =
+document.getElementById("payButton");
+
+const loading =
+document.getElementById("loading");
+
+let paymentLink = null;
+
+let allowedCountries = [];
+
+
+function showMessage(text) {
+
+    message.className = "message error";
+
+    message.textContent = text;
+
+    message.style.display = "block";
+}
+
+
+function hideMessage() {
+
+    message.className = "message";
+
+    message.textContent = "";
+
+    message.style.display = "none";
+}
+
+
+function getToken() {
+
+    const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+    return String(
+        params.get("token") || ""
+    ).trim();
+}
+
+
+async function callAPI(body) {
+
+    const response =
+    await fetch(API_URL, {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(body)
+
+    });
+
+    let data;
+
+    try {
+
+        data = await response.json();
+
+    } catch (error) {
+
+        throw new Error(
+            "Réponse invalide du serveur."
+        );
+
+    }
+
+    if (!response.ok) {
+
+        throw new Error(
+            data?.error ||
+            data?.message ||
+            "Une erreur est survenue."
+        );
+
+    }
+
+    if (data?.error) {
+
+        throw new Error(
+            data.error
+        );
+
+    }
+
+    return data;
+}
+
+
+function configureCountries(countries) {
+
+    allowedCountries =
+    Array.isArray(countries)
+    ? countries
+    : [];
+
+    if (allowedCountries.length === 0) {
+
+        throw new Error(
+            "Aucun pays n'est configuré pour ce lien."
+        );
+
+    }
+
+
+    if (allowedCountries.length === 1) {
+
+        const code =
+        allowedCountries[0];
+
+        const info =
+        COUNTRY_DATA[code];
+
+        if (!info) {
+
+            throw new Error(
+                "Pays non pris en charge."
+            );
+
+        }
+
+        countryField.classList.add(
+            "hidden"
+        );
+
+        singleCountryField.classList.remove(
+            "hidden"
+        );
+
+        singleCountryName.textContent =
+        info.name;
+
+        singleCountryInfo.textContent =
+        info.dial +
+        " • " +
+        info.currency;
+
+        return;
+    }
+
+
+    singleCountryField.classList.add(
+        "hidden"
+    );
+
+    countryField.classList.remove(
+        "hidden"
+    );
+
+    countrySelect.innerHTML = "";
+
+    allowedCountries.forEach(
+        function(code) {
+
+            const info =
+            COUNTRY_DATA[code];
+
+            if (!info) {
+                return;
+            }
+
+            const option =
+            document.createElement(
+                "option"
+            );
+
+            option.value = code;
+
+            option.textContent =
+            info.name;
+
+            countrySelect.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+function normalizeAmount(value) {
+
+    return String(value || "")
+    .replace(/[^\d]/g, "");
+}
+
+
+amountInput.addEventListener(
+    "input",
+    function() {
+
+        amountInput.value =
+        normalizeAmount(
+            amountInput.value
+        );
+
+    }
+);
+
+
+function configureAmount(link) {
+
+    const type =
+    String(
+        link.amount_type || ""
+    ).toLowerCase();
+
+
+    if (type === "fixed") {
+
+        freeAmountField.classList.add(
+            "hidden"
+        );
+
+        fixedAmountField.classList.remove(
+            "hidden"
+        );
+
+        const value =
+        Number(link.fixed_amount);
+
+        if (
+            !Number.isSafeInteger(value) ||
+            value < 500
+        ) {
+
+            throw new Error(
+                "Le montant fixe du lien est invalide."
+            );
+
+        }
+
+        fixedAmount.textContent =
+        value.toLocaleString("fr-FR") +
+        " XOF";
+
+        return;
+    }
+
+
+    fixedAmountField.classList.add(
+        "hidden"
+    );
+
+    freeAmountField.classList.remove(
+        "hidden"
+    );
+
+    amountInput.value = "";
+
+}
+
+
+async function loadPaymentLink() {
+
+    const token =
+    getToken();
+
+    if (!token) {
+
+        initialLoading.style.display =
+        "none";
+
+        showMessage(
+            "Lien de paiement invalide."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const data =
+        await callAPI({
+            token: token
+        });
+
+
+        paymentLink =
+        data.link ||
+        data.payment_link ||
+        data;
+
+
+        if (!paymentLink) {
+
+            throw new Error(
+                "Lien de paiement introuvable."
+            );
+
+        }
+
+
+        merchantName.textContent =
+        paymentLink.merchant_name ||
+        paymentLink.merchant ||
+        paymentLink.name ||
+        "Paiement";
+
+
+        const desc =
+        String(
+            paymentLink.description || ""
+        ).trim();
+
+
+        if (desc) {
+
+            description.textContent =
+            desc;
+
+            description.style.display =
+            "block";
+
+        } else {
+
+            description.textContent =
+            "";
+
+            description.style.display =
+            "none";
+
+        }
+
+
+        const countries =
+        paymentLink.country_codes ||
+        paymentLink.countries ||
+        data.country_codes ||
+        [];
+
+
+        configureCountries(
+            countries
+        );
+
+
+        configureAmount(
+            paymentLink
+        );
+
+
+        initialLoading.style.display =
+        "none";
+
+        content.style.display =
+        "block";
+
+        hideMessage();
+
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement :",
+            error
+        );
+
+        initialLoading.style.display =
+        "none";
+
+        content.style.display =
+        "none";
+
+        showMessage(
+            error.message ||
+            "Impossible de charger le lien."
+        );
+
+    }
+
+}
+
+
+function getSelectedCountry() {
+
+    if (allowedCountries.length === 1) {
+
+        return allowedCountries[0];
+
+    }
+
+    return String(
+        countrySelect.value || ""
+    ).trim();
+
+}
+
+
+function getPaymentAmount() {
+
+    const type =
+    String(
+        paymentLink?.amount_type || ""
+    ).toLowerCase();
+
+
+    if (type === "fixed") {
+
+        const value =
+        Number(
+            paymentLink.fixed_amount
+        );
+
+        if (
+            !Number.isSafeInteger(value) ||
+            value < 500
+        ) {
+
+            throw new Error(
+                "Le montant du paiement est invalide."
+            );
+
+        }
+
+        return value;
+    }
+
+
+    const cleaned =
+    normalizeAmount(
+        amountInput.value
+    );
+
+
+    if (cleaned === "") {
+
+        throw new Error(
+            "Veuillez saisir le montant du paiement."
+        );
+
+    }
+
+
+    const value =
+    Number(cleaned);
+
+
+    if (!Number.isSafeInteger(value)) {
+
+        throw new Error(
+            "Le montant doit être un entier valide."
+        );
+
+    }
+
+
+    if (value < 500) {
+
+        throw new Error(
+            "Le montant minimum est de 500 XOF."
+        );
+
+    }
+
+
+    return value;
+
+}
+
+
+function isAllowedCheckoutURL(value) {
+
+    try {
+
+        const url =
+        new URL(value);
+
+        const host =
+        url.hostname.toLowerCase();
+
+        return (
+            host ===
+            "checkout1.westpay.cfd"
+            ||
+            host ===
+            "payment.bank2.westpay.cfd"
+        );
+
+    } catch (error) {
+
+        return false;
+
+    }
+
+}
+
+
+async function startPayment() {
+
+    hideMessage();
+
+    payButton.disabled = true;
+
+    loading.style.display =
+    "block";
+
+
+    try {
+
+        if (!paymentLink) {
+
+            throw new Error(
+                "Le lien de paiement n'est pas encore chargé."
+            );
+
+        }
+
+
+        const token =
+        getToken();
+
+
+        if (!token) {
+
+            throw new Error(
+                "Lien de paiement invalide."
+            );
+
+        }
+
+
+        const countryCode =
+        getSelectedCountry();
+
+
+        if (!countryCode) {
+
+            throw new Error(
+                "Veuillez sélectionner un pays."
+            );
+
+        }
+
+
+        if (
+            !allowedCountries.includes(
+                countryCode
+            )
+        ) {
+
+            throw new Error(
+                "Le pays sélectionné n'est pas autorisé."
+            );
+
+        }
+
+
+        const amount =
+        getPaymentAmount();
+
+
+        const result =
+        await callAPI({
+
+            token: token,
+
+            country_code:
+            countryCode,
+
+            amount: amount
+
+        });
+
+
+        const checkout =
+        result.checkout ||
+        result.data?.checkout ||
+        result;
+
+
+        const checkoutURL =
+        checkout.recommended_url ||
+        checkout.bank1_url ||
+        checkout.bank2_url;
+
+
+        if (!checkoutURL) {
+
+            throw new Error(
+                "Le serveur n'a pas fourni la page de paiement."
+            );
+
+        }
+
+
+        if (
+            !isAllowedCheckoutURL(
+                checkoutURL
+            )
+        ) {
+
+            throw new Error(
+                "Adresse de paiement non autorisée."
+            );
+
+        }
+
+
+        window.location.assign(
+            checkoutURL
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Erreur paiement :",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Impossible de préparer le paiement."
+        );
+
+        payButton.disabled =
+        false;
+
+        loading.style.display =
+        "none";
+
+    }
+
+}
+
+
+payButton.addEventListener(
+    "click",
+    startPayment
+);
+
+
+loadPaymentLink();
+
+</script>
+
+</body>
+</html>
