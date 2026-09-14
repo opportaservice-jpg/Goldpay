@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Goldpay - Paiement</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f5f7fa;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111827;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 520px;
+      margin: auto;
+      padding: 25px 16px 40px;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 10px 0 25px;
+      color: #111827;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .merchant-name {
+      text-align: center;
+      font-size: 23px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .description {
+      text-align: center;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .field {
+      margin-bottom: 19px;
+    }
+
+    .label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 52px;
+      padding: 0 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      background: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #111827;
+    }
+
+    input[readonly] {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .country-display {
+      width: 100%;
+      min-height: 52px;
+      padding: 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      background: #f9fafb;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .country-subtitle {
+      margin-top: 7px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .amount-wrapper {
+      position: relative;
+    }
+
+    .amount-wrapper input {
+      padding-right: 65px;
+    }
+
+    .currency {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    .pay-button {
+      width: 100%;
+      height: 54px;
+      border: none;
+      border-radius: 13px;
+      background: #111827;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .pay-button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 14px;
+      margin-bottom: 18px;
+      border-radius: 11px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .message.error {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      display: block;
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 16px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #9ca3af;
+      font-size: 12px;
+      margin-top: 22px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="logo">
+    Goldpay
+  </div>
+
+  <div class="card">
+
+    <div id="message" class="message"></div>
+
+    <div id="initialLoading"
+         class="loading"
+         style="display:block;">
+      Chargement du paiement...
+    </div>
+
+    <div id="content" class="hidden">
+
+      <div id="merchantName"
+           class="merchant-name">
+        Paiement
+      </div>
+
+      <div id="description"
+           class="description">
+      </div>
+
+      <!-- =================================================
+           PAYS
+           ================================================= -->
+
+      <div id="countryField"
+           class="field hidden">
+
+        <label class="label">
+          Pays
+        </label>
+
+        <!-- Utilisé uniquement si plusieurs pays -->
+        <select id="countrySelect">
+        </select>
+
+      </div>
+
+      <!-- Utilisé si un seul pays -->
+      <div id="singleCountryField"
+           class="field hidden">
+
+        <label class="label">
+          Pays
+        </label>
+
+        <div id="singleCountryDisplay"
+             class="country-display">
+        </div>
+
+        <div id="countrySubtitle"
+             class="country-subtitle">
+        </div>
+
+      </div>
+
+      <!-- =================================================
+           MONTANT
+           ================================================= -->
+
+      <div class="field">
+
+        <label class="label"
+               for="amount">
+          Montant
+        </label>
+
+        <div class="amount-wrapper">
+
+          <input
+            id="amount"
+            type="number"
+            min="500"
+            step="1"
+            inputmode="numeric"
+            placeholder="Ex. 5000"
+          >
+
+          <span class="currency">
+            XOF
+          </span>
+
+        </div>
+
+      </div>
+
+      <!-- =================================================
+           BOUTON
+           ================================================= -->
+
+      <button
+        id="payButton"
+        class="pay-button"
+        type="button"
+      >
+        Continuer vers le paiement
+      </button>
+
+      <div id="loading"
+           class="loading">
+        Préparation du paiement sécurisé...
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Paiement sécurisé par Goldpay
+  </div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
+
+const API_URL =
+  "https://autcbkafczthxcyjkobf.supabase.co/functions/v1/public-payment-link";
+
+
+/* =========================================================
+   TOKEN DU LIEN
+   ========================================================= */
+
+const urlParams =
+  new URLSearchParams(window.location.search);
+
+const token =
+  (urlParams.get("token") || "").trim();
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const messageEl =
+  document.getElementById("message");
+
+const contentEl =
+  document.getElementById("content");
+
+const initialLoadingEl =
+  document.getElementById("initialLoading");
+
+const merchantNameEl =
+  document.getElementById("merchantName");
+
+const descriptionEl =
+  document.getElementById("description");
+
+const countryField =
+  document.getElementById("countryField");
+
+const countrySelect =
+  document.getElementById("countrySelect");
+
+const singleCountryField =
+  document.getElementById("singleCountryField");
+
+const singleCountryDisplay =
+  document.getElementById("singleCountryDisplay");
+
+const countrySubtitle =
+  document.getElementById("countrySubtitle");
+
+const amountEl =
+  document.getElementById("amount");
+
+const payButton =
+  document.getElementById("payButton");
+
+const loadingEl =
+  document.getElementById("loading");
+
+
+/* =========================================================
+   DONNEES
+   ========================================================= */
+
+let paymentLink = null;
+
+let selectedCountryCode = null;
+
+
+/* =========================================================
+   PAYS
+   ========================================================= */
+
+const COUNTRY_DATA = {
+
+  BF: {
+    name: "Burkina Faso",
+    dial: "+226"
+  },
+
+  BJ: {
+    name: "Benin",
+    dial: "+229"
+  },
+
+  CI: {
+    name: "Cote d'Ivoire",
+    dial: "+225"
+  },
+
+  TG: {
+    name: "Togo",
+    dial: "+228"
+  }
+
+};
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+function showError(text) {
+
+  messageEl.className =
+    "message error";
+
+  messageEl.textContent =
+    text;
+
+  messageEl.style.display =
+    "block";
+}
+
+
+function showSuccess(text) {
+
+  messageEl.className =
+    "message success";
+
+  messageEl.textContent =
+    text;
+
+  messageEl.style.display =
+    "block";
+}
+
+
+function clearMessage() {
+
+  messageEl.className =
+    "message";
+
+  messageEl.textContent =
+    "";
+
+  messageEl.style.display =
+    "none";
+}
+
+
+/* =========================================================
+   APPEL DE LA FONCTION SUPABASE
+   ========================================================= */
+
+async function callAPI(body) {
+
+  const response =
+    await fetch(API_URL, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify(body)
+
+    });
+
+
+  let data;
+
+  try {
+
+    data =
+      await response.json();
+
+  } catch {
+
+    throw new Error(
+      "Réponse invalide du serveur."
+    );
+
+  }
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      data?.error ||
+      "Une erreur est survenue."
+    );
+
+  }
+
+
+  return data;
+}
+
+
+/* =========================================================
+   AFFICHAGE DU PAYS
+   ========================================================= */
+
+function configureCountries(countryCodes) {
+
+  /*
+   * Nettoyage des codes
+   */
+
+  const countries =
+    [...new Set(
+      countryCodes
+        .map(code =>
+          String(code).trim().toUpperCase()
+        )
+        .filter(Boolean)
+    )];
+
+
+  if (!countries.length) {
+
+    throw new Error(
+      "Aucun pays n'est autorisé pour ce lien."
+    );
+
+  }
+
+
+  /*
+   * ================================================
+   * UN SEUL PAYS
+   * ================================================
+   */
+
+  if (countries.length === 1) {
+
+    const code =
+      countries[0];
+
+    const country =
+      COUNTRY_DATA[code];
+
+
+    if (!country) {
+
+      throw new Error(
+        "Pays non pris en charge."
+      );
+
+    }
+
+
+    selectedCountryCode =
+      code;
+
+
+    /*
+     * Cacher le sélecteur
+     */
+
+    countryField.classList.add(
+      "hidden"
+    );
+
+
+    /*
+     * Afficher directement le pays
+     */
+
+    singleCountryField.classList.remove(
+      "hidden"
+    );
+
+
+    singleCountryDisplay.textContent =
+      country.name +
+      " (" +
+      country.dial +
+      ")";
+
+
+    countrySubtitle.textContent =
+      "Pays sélectionné pour ce lien de paiement";
+
+
+    return;
+
+  }
+
+
+  /*
+   * ================================================
+   * PLUSIEURS PAYS
+   * ================================================
+   */
+
+  selectedCountryCode =
+    null;
+
+
+  singleCountryField.classList.add(
+    "hidden"
+  );
+
+
+  countryField.classList.remove(
+    "hidden"
+  );
+
+
+  countrySelect.innerHTML =
+    "";
+
+
+  countries.forEach(code => {
+
+    const country =
+      COUNTRY_DATA[code];
+
+    if (!country) {
+      return;
+    }
+
+
+    const option =
+      document.createElement("option");
+
+
+    option.value =
+      code;
+
+
+    option.textContent =
+      country.name +
+      " (" +
+      country.dial +
+      ")";
+
+
+    countrySelect.appendChild(
+      option
+    );
+
+  });
+
+
+  /*
+   * Premier pays sélectionné par défaut
+   */
+
+  if (countrySelect.options.length > 0) {
+
+    selectedCountryCode =
+      countrySelect.value;
+
+  }
+
+}
+
+
+/* =========================================================
+   CHANGEMENT DE PAYS
+   ========================================================= */
+
+countrySelect.addEventListener(
+  "change",
+  function() {
+
+    selectedCountryCode =
+      countrySelect.value;
+
+    clearMessage();
+
+  }
+);
+
+
+/* =========================================================
+   CHARGEMENT DU LIEN
+   ========================================================= */
+
+async function loadPaymentLink() {
+
+  if (!token) {
+
+    initialLoadingEl.style.display =
+      "none";
+
+    showError(
+      "Lien de paiement invalide."
+    );
+
+    return;
+  }
+
+
+  if (token.length < 32 ||
+      token.length > 128) {
+
+    initialLoadingEl.style.display =
+      "none";
+
+    showError(
+      "Token de paiement invalide."
+    );
+
+    return;
+  }
+
+
+  try {
+
+    /*
+     * Appel initial :
+     * récupération des informations
+     * du lien et des pays.
+     */
+
+    const data =
+      await callAPI({
+        token: token
+      });
+
+
+    if (!data ||
+        !data.success ||
+        !data.link) {
+
+      throw new Error(
+        "Impossible de charger ce lien de paiement."
+      );
+
+    }
+
+
+    paymentLink =
+      data.link;
+
+
+    /*
+     * NOM
+     */
+
+    merchantNameEl.textContent =
+      paymentLink.name ||
+      "Paiement";
+
+
+    /*
+     * DESCRIPTION
+     */
+
+    descriptionEl.textContent =
+      paymentLink.description ||
+      "Effectuez votre paiement en toute sécurité.";
+
+
+    /*
+     * PAYS
+     */
+
+    configureCountries(
+      paymentLink.country_codes || []
+    );
+
+
+    /*
+     * MONTANT
+     */
+
+    if (
+      paymentLink.amount_type ===
+      "fixed"
+    ) {
+
+      amountEl.value =
+        Number(
+          paymentLink.fixed_amount
+        );
+
+      amountEl.readOnly =
+        true;
+
+    } else {
+
+      amountEl.value =
+        "";
+
+      amountEl.readOnly =
+        false;
+
+    }
+
+
+    /*
+     * AFFICHAGE
+     */
+
+    initialLoadingEl.style.display =
+      "none";
+
+    contentEl.classList.remove(
+      "hidden"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Goldpay:",
+      error
+    );
+
+
+    initialLoadingEl.style.display =
+      "none";
+
+
+    showError(
+      error.message ||
+      "Impossible de charger le paiement."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LANCEMENT DU PAIEMENT
+   ========================================================= */
+
+async function startPayment() {
+
+  clearMessage();
+
+
+  /*
+   * Vérifier le lien
+   */
+
+  if (!paymentLink) {
+
+    showError(
+      "Le paiement n'est pas encore chargé."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Vérifier le pays
+   */
+
+  let countryCode;
+
+
+  if (
+    paymentLink.country_codes &&
+    paymentLink.country_codes.length === 1
+  ) {
+
+    /*
+     * Un seul pays :
+     * aucun choix demandé.
+     */
+
+    countryCode =
+      paymentLink.country_codes[0]
+        .trim()
+        .toUpperCase();
+
+  } else {
+
+    /*
+     * Plusieurs pays :
+     * utiliser le choix de l'utilisateur.
+     */
+
+    countryCode =
+      selectedCountryCode ||
+      countrySelect.value
+        .trim()
+        .toUpperCase();
+
+  }
+
+
+  if (!countryCode) {
+
+    showError(
+      "Veuillez sélectionner votre pays."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Vérifier le montant
+   */
+
+  const amount =
+    Number(
+      amountEl.value
+    );
+
+
+  if (
+    !Number.isSafeInteger(amount) ||
+    amount < 500
+  ) {
+
+    showError(
+      "Le montant doit être un nombre entier d'au moins 500 XOF."
+    );
+
+    amountEl.focus();
+
+    return;
+
+  }
+
+
+  /*
+   * Bloquer les doubles clics
+   */
+
+  payButton.disabled =
+    true;
+
+  payButton.textContent =
+    "Préparation du paiement...";
+
+  loadingEl.style.display =
+    "block";
+
+
+  try {
+
+    /*
+     * Appel de public-payment-link
+     *
+     * Le serveur vérifie :
+     * - le token
+     * - le lien
+     * - le marchand
+     * - le pays
+     * - le montant
+     *
+     * Puis génère les URLs WestPay.
+     */
+
+    const data =
+      await callAPI({
+
+        token: token,
+
+        country_code:
+          countryCode,
+
+        amount:
+          amount
+
+      });
+
+
+    console.log(
+      "Goldpay checkout:",
+      data
+    );
+
+
+    if (
+      !data ||
+      !data.success ||
+      !data.checkout
+    ) {
+
+      throw new Error(
+        "Aucune page de paiement n'a été fournie."
+      );
+
+    }
+
+
+    /*
+     * URL WestPay
+     */
+
+    const checkoutUrl =
+      data.checkout.recommended_url ||
+      data.checkout.bank1_url ||
+      data.checkout.bank2_url;
+
+
+    if (
+      !checkoutUrl ||
+      typeof checkoutUrl !==
+      "string"
+    ) {
+
+      throw new Error(
+        "URL WestPay introuvable."
+      );
+
+    }
+
+
+    /*
+     * Vérification de la destination
+     */
+
+    let parsedUrl;
+
+    try {
+
+      parsedUrl =
+        new URL(checkoutUrl);
+
+    } catch {
+
+      throw new Error(
+        "URL de paiement invalide."
+      );
+
+    }
+
+
+    const allowedHosts = [
+
+      "checkout1.westpay.cfd",
+
+      "payment.bank2.westpay.cfd"
+
+    ];
+
+
+    if (
+      !allowedHosts.includes(
+        parsedUrl.hostname
+      )
+    ) {
+
+      throw new Error(
+        "Destination de paiement non autorisée."
+      );
+
+    }
+
+
+    /*
+     * Message
+     */
+
+    showSuccess(
+      "Redirection vers le paiement sécurisé..."
+    );
+
+
+    /*
+     * REDIRECTION RÉELLE
+     */
+
+    setTimeout(
+      function() {
+
+        window.location.assign(
+          checkoutUrl
+        );
+
+      },
+      250
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Erreur paiement Goldpay:",
+      error
+    );
+
+
+    showError(
+      error.message ||
+      "Impossible de démarrer le paiement."
+    );
+
+
+    payButton.disabled =
+      false;
+
+
+    payButton.textContent =
+      "Continuer vers le paiement";
+
+
+    loadingEl.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =========================================================
+   BOUTON
+   ========================================================= */
+
+payButton.addEventListener(
+  "click",
+  startPayment
+);
+
+
+/* =========================================================
+   TOUCHE ENTRÉE
+   ========================================================= */
+
+amountEl.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (event.key === "Enter") {
+
+      event.preventDefault();
+
+      startPayment();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   DÉMARRAGE
+   ========================================================= */
+
+loadPaymentLink();
+
+</script>
+
+</body>
+  </html>
