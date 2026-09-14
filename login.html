@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+
+    <title>Connexion marchand — GOLDPAY 🤖</title>
+
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --dark: #0b1220;
+            --white: #ffffff;
+            --text: #172033;
+            --muted: #687386;
+            --border: #e2e7ef;
+            --accent: #2563eb;
+            --accent-dark: #1d4ed8;
+            --success: #16803c;
+            --danger: #c62828;
+            --shadow: 0 20px 60px rgba(15,23,42,.10);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+                         BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top right,
+                rgba(37,99,235,.08), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .skip-link {
+            position: fixed;
+            left: 12px;
+            top: -100px;
+            z-index: 9999;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: #fff;
+            color: #111827;
+        }
+
+        .skip-link:focus {
+            top: 12px;
+        }
+
+        :focus-visible {
+            outline: 3px solid rgba(37,99,235,.35);
+            outline-offset: 3px;
+        }
+
+        /* HEADER */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11,18,32,.96);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            backdrop-filter: blur(16px);
+        }
+
+        .header-inner {
+            width: min(1160px, calc(100% - 32px));
+            min-height: 72px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -.4px;
+        }
+
+        .robot {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #fff;
+            font-size: 19px;
+        }
+
+        .back-link {
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        /* MAIN */
+
+        main {
+            min-height: calc(100vh - 72px);
+            padding: 55px 16px 70px;
+        }
+
+        .layout {
+            width: min(1050px, 100%);
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 470px;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* INTRO */
+
+        .intro {
+            max-width: 540px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            padding: 7px 11px;
+            border: 1px solid #dbe4f0;
+            border-radius: 999px;
+            background: #fff;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        h1 {
+            margin-bottom: 18px;
+            color: var(--dark);
+            font-size: clamp(38px, 5vw, 58px);
+            line-height: 1.04;
+            letter-spacing: -2px;
+        }
+
+        .intro p {
+            max-width: 510px;
+            margin-bottom: 30px;
+            color: var(--muted);
+            font-size: 17px;
+        }
+
+        .security-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .security-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .icon {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #eaf1ff;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .security-item strong {
+            display: block;
+            color: #172033;
+            font-size: 14px;
+        }
+
+        .security-item span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* CARD */
+
+        .card {
+            padding: 34px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            margin-bottom: 26px;
+        }
+
+        .card-header h2 {
+            margin-bottom: 7px;
+            color: var(--dark);
+            font-size: 27px;
+            letter-spacing: -.7px;
+        }
+
+        .card-header p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 11px;
+            font-size: 13px;
+        }
+
+        .message.error {
+            display: block;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: var(--danger);
+        }
+
+        .message.success {
+            display: block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: var(--success);
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #263246;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            height: 50px;
+            padding: 0 15px;
+            border: 1px solid #d8dee8;
+            border-radius: 12px;
+            background: #fff;
+            color: #111827;
+            font-size: 15px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        input::placeholder {
+            color: #9aa4b2;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(37,99,235,.09);
+        }
+
+        .password {
+            padding-right: 52px;
+        }
+
+        .toggle {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #64748b;
+        }
+
+        .toggle:hover {
+            background: #f1f5f9;
+        }
+
+        /* CAPTCHA */
+
+        .captcha-row {
+            display: grid;
+            grid-template-columns: 1fr 50px;
+            gap: 10px;
+        }
+
+        .captcha-display {
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #d8dee8;
+            border-radius: 12px;
+            background:
+                repeating-linear-gradient(
+                    -25deg,
+                    #eef2f7,
+                    #eef2f7 3px,
+                    #f8fafc 3px,
+                    #f8fafc 7px
+                );
+            color: #172033;
+            font-family: monospace;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            user-select: none;
+        }
+
+        .refresh {
+            height: 50px;
+            border: 1px solid #d8dee8;
+            border-radius: 12px;
+            background: #fff;
+            color: #334155;
+            font-size: 20px;
+        }
+
+        .refresh:hover {
+            background: #f8fafc;
+        }
+
+        .captcha-input {
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .hint {
+            margin-top: 6px;
+            color: #7b8798;
+            font-size: 11px;
+        }
+
+        /* BUTTON */
+
+        .submit {
+            width: 100%;
+            min-height: 52px;
+            margin-top: 3px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            transition: .2s;
+        }
+
+        .submit:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(37,99,235,.2);
+        }
+
+        .submit:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .signup-link {
+            margin-top: 21px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .signup-link a {
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .secure {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #edf0f4;
+            color: #7b8798;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* TELEGRAM STEP */
+
+        #telegramStep {
+            display: none;
+        }
+
+        .telegram-box {
+            margin-bottom: 20px;
+            padding: 18px;
+            border: 1px solid #dbe4f0;
+            border-radius: 14px;
+            background: #f8fafc;
+        }
+
+        .telegram-box-title {
+            margin-bottom: 7px;
+            color: #172033;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .telegram-box-text {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .code-input {
+            text-align: center;
+            letter-spacing: 10px;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .countdown {
+            margin-top: 9px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .resend {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            border: 0;
+            background: transparent;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .resend:disabled {
+            color: #9aa4b2;
+            cursor: not-allowed;
+        }
+
+        footer {
+            padding: 0 16px 30px;
+            text-align: center;
+            color: #8a94a3;
+            font-size: 11px;
+        }
+
+        @media (max-width: 850px) {
+            .layout {
+                grid-template-columns: 1fr;
+                max-width: 620px;
+                gap: 35px;
+            }
+
+            .intro {
+                max-width: none;
+                text-align: center;
+            }
+
+            .intro p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .security-list {
+                max-width: 430px;
+                margin: auto;
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .header-inner {
+                min-height: 64px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .robot {
+                width: 31px;
+                height: 31px;
+            }
+
+            main {
+                padding-top: 35px;
+            }
+
+            h1 {
+                font-size: 39px;
+                letter-spacing: -1.6px;
+            }
+
+            .intro p {
+                font-size: 15px;
+            }
+
+            .card {
+                padding: 23px 18px;
+                border-radius: 19px;
+            }
+
+            .card-header h2 {
+                font-size: 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<a class="skip-link" href="#connexion">
+    Aller directement à la connexion
+</a>
+
+<header>
+    <div class="header-inner">
+
+        <a href="index.html"
+           class="brand"
+           aria-label="GOLDPAY, accueil">
+
+            <span class="robot" aria-hidden="true">🤖</span>
+            <span>GOLDPAY</span>
+
+        </a>
+
+        <a href="index.html" class="back-link">
+            ← Retour à l'accueil
+        </a>
+
+    </div>
+</header>
+
+
+<main id="connexion">
+
+    <div class="layout">
+
+        <!-- PRESENTATION -->
+
+        <section class="intro" aria-labelledby="intro-title">
+
+            <div class="eyebrow">
+                <span class="dot" aria-hidden="true"></span>
+                Espace marchand sécurisé
+            </div>
+
+            <h1 id="intro-title">
+                Bienvenue sur votre espace GOLDPAY.
+            </h1>
+
+            <p>
+                Connectez-vous pour gérer vos paiements,
+                vos liens de paiement, vos soldes et vos opérations
+                marchandes.
+            </p>
+
+            <div class="security-list">
+
+                <div class="security-item">
+                    <span class="icon" aria-hidden="true">✓</span>
+                    <div>
+                        <strong>Vérification renforcée</strong>
+                        <span>
+                            Un code de connexion est envoyé sur votre
+                            groupe Telegram.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="security-item">
+                    <span class="icon" aria-hidden="true">✓</span>
+                    <div>
+                        <strong>Accès marchand personnalisé</strong>
+                        <span>
+                            Retrouvez vos opérations et vos soldes
+                            par pays.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="security-item">
+                    <span class="icon" aria-hidden="true">✓</span>
+                    <div>
+                        <strong>Protection du compte</strong>
+                        <span>
+                            Vos identifiants sensibles restent protégés
+                            côté serveur.
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CARD -->
+
+        <section class="card" aria-labelledby="login-title">
+
+            <!-- ETAPE 1 -->
+
+            <div id="loginStep">
+
+                <div class="card-header">
+
+                    <h2 id="login-title">
+                        Se connecter
+                    </h2>
+
+                    <p>
+                        Accédez à votre compte marchand.
+                    </p>
+
+                </div>
+
+                <div
+                    id="message"
+                    class="message"
+                    role="alert"
+                    aria-live="polite">
+                </div>
+
+
+                <form id="loginForm" novalidate>
+
+                    <div class="field">
+
+                        <label for="email">
+                            Adresse e-mail
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="vous@entreprise.com"
+                            maxlength="120"
+                            required>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="password">
+                            Mot de passe
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <input
+                                id="password"
+                                class="password"
+                                type="password"
+                                autocomplete="current-password"
+                                placeholder="Votre mot de passe"
+                                required>
+
+                            <button
+                                type="button"
+                                class="toggle"
+                                id="togglePassword"
+                                aria-label="Afficher le mot de passe">
+                                ◉
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="captcha">
+                            Code de sécurité
+                        </label>
+
+                        <div class="captcha-row">
+
+                            <div
+                                id="captchaDisplay"
+                                class="captcha-display"
+                                aria-label="Code CAPTCHA">
+                                -----
+                            </div>
+
+                            <button
+                                type="button"
+                                id="refreshCaptcha"
+                                class="refresh"
+                                aria-label="Générer un nouveau CAPTCHA">
+                                ↻
+                            </button>
+
+                        </div>
+
+                        <input
+                            id="captcha"
+                            class="captcha-input"
+                            type="text"
+                            inputmode="text"
+                            autocomplete="off"
+                            autocapitalize="characters"
+                            maxlength="5"
+                            placeholder="Entrez les 5 caractères"
+                            required>
+
+                        <p class="hint">
+                            Le code contient exactement 5 caractères.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="loginBtn"
+                        class="submit"
+                        type="submit">
+
+                        Continuer
+                    </button>
+
+                </form>
+
+
+                <div class="signup-link">
+                    Vous n'avez pas encore de compte ?
+                    <a href="signup.html">
+                        Créer un compte marchand
+                    </a>
+                </div>
+
+
+                <div class="secure">
+
+                    <span aria-hidden="true">🔒</span>
+
+                    <span>
+                        Votre connexion est protégée.
+                        Après vérification, un code temporaire sera
+                        envoyé à votre groupe Telegram.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ETAPE 2 -->
+
+            <div id="telegramStep">
+
+                <div class="card-header">
+
+                    <h2>
+                        Vérification Telegram
+                    </h2>
+
+             <p>
+                        Une dernière vérification est nécessaire.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="telegramMessage"
+                    class="message"
+                    role="alert"
+                    aria-live="polite">
+                </div>
+
+
+                <div class="telegram-box">
+
+                    <div class="telegram-box-title">
+                        Code de connexion envoyé
+                    </div>
+
+                    <div class="telegram-box-text">
+                        Consultez le groupe Telegram associé
+                        à votre compte GOLDPAY.
+                        Le code est valable pendant 3 minutes.
+                    </div>
+
+                </div>
+
+
+                <form id="telegramForm">
+
+                    <div class="field">
+
+                        <label for="telegramCode">
+                            Code à 6 chiffres
+                        </label>
+
+                        <input
+                            id="telegramCode"
+                            class="code-input"
+                            type="text"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            maxlength="6"
+                            placeholder="000000"
+                            required>
+
+                        <div
+                            id="countdown"
+                            class="countdown"
+                            aria-live="polite">
+                            Code valable 03:00
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        id="verifyBtn"
+                        class="submit"
+                        type="submit">
+
+                        Vérifier et accéder au compte
+                    </button>
+
+                </form>
+
+
+                <button
+                    id="resendBtn"
+                    class="resend"
+                    type="button">
+
+                    Renvoyer un code
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<footer>
+    © 2026 GOLDPAY — Plateforme de paiement marchand.
+</footer>
+
+
+<script>
+
+    const SUPABASE_URL =
+        "https://autcbkafczthxcyjkobf.supabase.co";
+
+    const LOGIN_ENDPOINT =
+        `${SUPABASE_URL}/functions/v1/merchant-login`;
+
+    const VERIFY_ENDPOINT =
+        `${SUPABASE_URL}/functions/v1/verify-telegram-login`;
+
+    const CAPTCHA_ENDPOINT =
+        `${SUPABASE_URL}/functions/v1/create-captcha`;
+
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+    const loginStep =
+        document.getElementById("loginStep");
+
+    const telegramStep =
+        document.getElementById("telegramStep");
+
+    const message =
+        document.getElementById("message");
+
+    const telegramMessage =
+        document.getElementById("telegramMessage");
+
+    const loginBtn =
+        document.getElementById("loginBtn");
+
+    const verifyBtn =
+        document.getElementById("verifyBtn");
+
+    const captchaDisplay =
+        document.getElementById("captchaDisplay");
+
+    const captchaInput =
+        document.getElementById("captcha");
+
+    const refreshCaptcha =
+        document.getElementById("refreshCaptcha");
+
+    const telegramCode =
+        document.getElementById("telegramCode");
+
+    const countdown =
+        document.getElementById("countdown");
+
+    const resendBtn =
+        document.getElementById("resendBtn");
+
+
+    let captchaId = null;
+    let countdownTimer = null;
+    let telegramExpiresAt = null;
+
+
+    function showMessage(element, text, type = "error") {
+
+        element.textContent = text;
+        element.className = `message ${type}`;
+    }
+
+
+    function clearMessage(element) {
+
+        element.textContent = "";
+        element.className = "message";
+    }
+
+
+    async function generateCaptcha() {
+
+        clearMessage(message);
+
+        captchaDisplay.textContent = ".....";
+        captchaInput.value = "";
+        refreshCaptcha.disabled = true;
+
+        try {
+
+            const response = await fetch(
+                CAPTCHA_ENDPOINT,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        purpose: "login",
+                        email:
+                            document
+                                .getElementById("email")
+                                .value
+                                .trim()
+                                .toLowerCase()
+                    })
+                }
+            );
+
+            const data =
+                await response.json()
+                    .catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Impossible de générer le CAPTCHA."
+                );
+            }
+
+            captchaId =
+                data.captcha_id ||
+                data.id ||
+                null;
+
+            const value =
+                data.captcha ||
+                data.code ||
+                data.challenge ||
+                "";
+
+            if (!value) {
+                throw new Error(
+                    "Le CAPTCHA n'a pas été reçu."
+                );
+            }
+
+            captchaDisplay.textContent =
+                String(value).toUpperCase();
+
+        } catch (error) {
+
+            console.error(error);
+
+            captchaDisplay.textContent = "-----";
+
+            showMessage(
+                message,
+                error.message ||
+                "Erreur de connexion."
+            );
+
+        } finally {
+
+            refreshCaptcha.disabled = false;
+        }
+    }
+
+
+    refreshCaptcha.addEventListener(
+        "click",
+        generateCaptcha
+    );
+
+
+    document
+        .getElementById("togglePassword")
+        .addEventListener("click", function () {
+
+            const input =
+                document.getElementById("password");
+
+            if (input.type === "password") {
+
+                input.type = "text";
+
+                this.setAttribute(
+                    "aria-label",
+                    "Masquer le mot de passe"
+                );
+
+            } else {
+
+                input.type = "password";
+
+                this.setAttribute(
+                    "aria-label",
+                    "Afficher le mot de passe"
+                );
+            }
+        });
+
+
+    captchaInput.addEventListener(
+        "input",
+        function () {
+
+            this.value =
+                this.value
+                    .toUpperCase()
+                    .replace(/[^A-Z0-9]/g, "")
+                    .slice(0, 5);
+        }
+    );
+
+
+    telegramCode.addEventListener(
+        "input",
+        function () {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 6);
+        }
+    );
+
+
+    function setLoginLoading(loading) {
+
+        loginBtn.disabled = loading;
+
+        loginBtn.textContent =
+            loading
+                ? "Vérification..."
+                : "Continuer";
+    }
+
+
+    function setVerifyLoading(loading) {
+
+        verifyBtn.disabled = loading;
+
+        verifyBtn.textContent =
+            loading
+                ? "Connexion..."
+                : "Vérifier et accéder au compte";
+    }
+
+
+    function startCountdown(expiresAt) {
+
+        clearInterval(countdownTimer);
+
+        telegramExpiresAt =
+            new Date(expiresAt).getTime();
+
+        function update() {
+
+            const remaining =
+                Math.max(
+                    0,
+                    telegramExpiresAt - Date.now()
+                );
+
+            const seconds =
+                Math.floor(remaining / 1000);
+
+            const minutes =
+                Math.floor(seconds / 60);
+
+            const secs =
+                seconds % 60;
+
+            countdown.textContent =
+                `Code valable ${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+
+            if (remaining <= 0) {
+
+                clearInterval(countdownTimer);
+
+                countdown.textContent =
+                    "Le code a expiré.";
+
+                resendBtn.disabled = false;
+            }
+        }
+
+        update();
+
+        countdownTimer =
+            setInterval(update, 1000);
+    }
+
+
+    loginForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+            clearMessage(message);
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
+
+            const captcha =
+                captchaInput.value
+                    .trim()
+                    .toUpperCase();
+
+
+            if (!email) {
+
+                showMessage(
+                    message,
+                    "Veuillez renseigner votre adresse e-mail."
+                );
+
+                return;
+            }
+
+
+            if (!password) {
+
+                showMessage(
+                    message,
+                    "Veuillez renseigner votre mot de passe."
+                );
+
+                return;
+            }
+
+
+            if (captcha.length !== 5) {
+
+                showMessage(
+                    message,
+                    "Le CAPTCHA doit contenir exactement 5 caractères."
+                );
+
+                return;
+            }
+
+
+            setLoginLoading(true);
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        LOGIN_ENDPOINT,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                email,
+                                password,
+                                captcha,
+                                captcha_id: captchaId
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json()
+                        .catch(() => ({}));
+
+
+                if (!response.ok) {
+
+                    /*
+                     * Après une erreur CAPTCHA,
+                     * le serveur peut demander un nouveau code.
+                     */
+
+                    generateCaptcha();
+
+                    throw new Error(
+                        data.error ||
+                        data.message ||
+                        "Identifiants incorrects."
+                    );
+                }
+
+
+                /*
+                 * merchant-login doit retourner :
+                 *
+                 * requires_telegram_code: true
+                 * expires_at: ...
+                 *
+                 * et éventuellement merchant_id.
+                 */
+
+                if (
+                    data.requires_telegram_code === false
+                ) {
+
+                    throw new Error(
+                        "La vérification Telegram n'est pas disponible pour ce compte."
+                    );
+                }
+
+
+                sessionStorage.setItem(
+                    "goldpay_login_email",
+                    email
+                );
+
+
+                if (data.merchant_id) {
+
+                    sessionStorage.setItem(
+                        "goldpay_merchant_id",
+                        data.merchant_id
+                    );
+                }
+
+
+                loginStep.style.display = "none";
+                telegramStep.style.display = "block";
+
+                clearMessage(telegramMessage);
+
+                startCountdown(
+                    data.expires_at ||
+                    new Date(
+                        Date.now() + 3 * 60 * 1000
+                    ).toISOString()
+                );
+
+                telegramCode.focus();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Login error:",
+                    error
+                );
+
+                showMessage(
+                    message,
+                    error.message ||
+                    "Impossible de se connecter."
+                );
+
+            } finally {
+
+                setLoginLoading(false);
+            }
+        }
+    );
+
+
+    document
+        .getElementById("telegramForm")
+        .addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                clearMessage(telegramMessage);
+
+                const code =
+                    telegramCode.value.trim();
+
+                const email =
+                    sessionStorage.getItem(
+                        "goldpay_login_email"
+                    );
+
+
+                if (!email) {
+
+                    showMessage(
+                        telegramMessage,
+                        "Votre session de connexion a expiré. Recommencez."
+                    );
+
+                    return;
+                }
+
+
+                if (!/^\d{6}$/.test(code)) {
+
+                    showMessage(
+                        telegramMessage,
+                        "Le code Telegram doit contenir exactement 6 chiffres."
+                    );
+
+                    return;
+                }
+
+
+                setVerifyLoading(true);
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            VERIFY_ENDPOINT,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    email,
+                                    code
+                                })
+                            }
+                        );
+
+
+                    const data =
+                        await response.json()
+                            .catch(() => ({}));
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.error ||
+                            data.message ||
+                            "Code Telegram incorrect."
+                        );
+                    }
+
+
+                    /*
+                     * Le serveur doit retourner le token
+                     * de session créé côté serveur.
+                     */
+
+                    const token =
+                        data.token ||
+                        data.session_token ||
+                        data.access_token;
+
+
+                    if (!token) {
+
+                        throw new Error(
+                            "Connexion réussie mais aucun jeton de session n'a été reçu."
+                        );
+                    }
+
+
+                    sessionStorage.setItem(
+                        "goldpay_session_token",
+                        token
+                    );
+
+
+                    if (data.merchant_id) {
+
+                        sessionStorage.setItem(
+                            "goldpay_merchant_id",
+                            data.merchant_id
+                        );
+                    }
+
+
+                    showMessage(
+                        telegramMessage,
+                        "Connexion réussie. Ouverture de votre espace marchand...",
+                        "success"
+                    );
+
+
+                    clearInterval(countdownTimer);
+
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    }, 700);
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Telegram verification error:",
+                        error
+                    );
+
+                    showMessage(
+                        telegramMessage,
+                        error.message ||
+                        "Impossible de vérifier le code."
+                    );
+
+                } finally {
+
+                    setVerifyLoading(false);
+                }
+            }
+        );
+
+
+    resendBtn.addEventListener(
+        "click",
+        async function () {
+
+            /*
+             * On revient à l'étape de connexion afin
+             * de demander un nouveau code proprement.
+             */
+
+            clearMessage(telegramMessage);
+
+            loginStep.style.display = "block";
+            telegramStep.style.display = "none";
+
+            telegramCode.value = "";
+
+            await generateCaptcha();
+
+            document
+                .getElementById("captcha")
+                .focus();
+        }
+    );
+
+
+    /*
+     * Chargement initial du CAPTCHA.
+     */
+
+    generateCaptcha();
+
+</script>
+
+</body>
+</html>
