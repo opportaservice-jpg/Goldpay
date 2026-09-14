@@ -1426,9 +1426,9 @@
                                 },
 
                                 body: JSON.stringify({
-                                    email,
-                                    code
-                                })
+    merchant_id: sessionStorage.getItem("goldpay_merchant_id"),
+    code
+})
                             }
                         );
 
@@ -1467,10 +1467,15 @@
                     }
 
 
-                    sessionStorage.setItem(
-                        "goldpay_session_token",
-                        token
-                    );
+                    localStorage.setItem(
+    "goldpay_session",
+    JSON.stringify({
+        token: token,
+        merchant_id: sessionStorage.getItem("goldpay_merchant_id"),
+        merchant: data.merchant || null,
+        expires_at: data.expires_at || null
+    })
+);
 
 
                     if (data.merchant_id) {
