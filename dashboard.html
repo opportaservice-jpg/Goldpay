@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="Tableau de bord marchand Goldpay">
+<title>Goldpay — Tableau de bord</title>
+
+<style>
+:root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --dark:#07111f;
+    --dark-2:#0d1b2e;
+    --text:#101828;
+    --muted:#667085;
+    --line:#e4e9f0;
+    --blue:#1769ff;
+    --blue-dark:#0d4fd6;
+    --green:#12b76a;
+    --orange:#f79009;
+    --red:#f04438;
+    --shadow:0 12px 35px rgba(7,17,31,.08);
+    --radius:20px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,
+a,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button:focus-visible,
+a:focus-visible{
+    outline:3px solid rgba(23,105,255,.35);
+    outline-offset:3px;
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    height:72px;
+    background:rgba(7,17,31,.97);
+    backdrop-filter:blur(14px);
+    color:#fff;
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.header-inner{
+    width:min(1380px,calc(100% - 32px));
+    height:100%;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:21px;
+    font-weight:900;
+    letter-spacing:-.5px;
+}
+
+.robot{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#1769ff,#5c9aff);
+    display:grid;
+    place-items:center;
+    box-shadow:0 7px 22px rgba(23,105,255,.3);
+    font-size:19px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.merchant-mini{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:7px 12px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:12px;
+}
+
+.avatar{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    background:#fff;
+    color:var(--dark);
+    display:grid;
+    place-items:center;
+    font-weight:900;
+}
+
+.merchant-info{
+    display:flex;
+    flex-direction:column;
+}
+
+.merchant-name{
+    font-size:13px;
+    font-weight:800;
+}
+
+.merchant-email{
+    color:#98a2b3;
+    font-size:11px;
+}
+
+.logout-btn{
+    border:1px solid rgba(255,255,255,.13);
+    background:rgba(255,255,255,.05);
+    color:#fff;
+    padding:10px 14px;
+    border-radius:11px;
+    font-weight:700;
+}
+
+.logout-btn:hover{
+    background:rgba(255,255,255,.1);
+}
+
+/* ================= LAYOUT ================= */
+
+.layout{
+    width:min(1380px,calc(100% - 32px));
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:235px 1fr;
+    gap:28px;
+    padding:28px 0 45px;
+}
+
+.sidebar{
+    position:sticky;
+    top:98px;
+    align-self:start;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:14px;
+    box-shadow:var(--shadow);
+}
+
+.nav-title{
+    padding:9px 10px;
+    color:#98a2b3;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-weight:900;
+}
+
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    color:#475467;
+    font-size:14px;
+    font-weight:750;
+    margin-bottom:3px;
+}
+
+.nav-item:hover{
+    background:#f2f6ff;
+    color:var(--blue);
+}
+
+.nav-item.active{
+    background:#edf4ff;
+    color:var(--blue);
+}
+
+.nav-icon{
+    width:30px;
+    height:30px;
+    border-radius:9px;
+    display:grid;
+    place-items:center;
+    background:#f2f4f7;
+    font-size:15px;
+}
+
+.nav-item.active .nav-icon{
+    background:#dce9ff;
+}
+
+.content{
+    min-width:0;
+}
+
+/* ================= WELCOME ================= */
+
+.welcome{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:22px;
+}
+
+.welcome h1{
+    font-size:30px;
+    letter-spacing:-1px;
+    margin-bottom:6px;
+}
+
+.welcome p{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.date{
+    color:#667085;
+    font-size:13px;
+    font-weight:650;
+}
+
+/* ================= BALANCE ================= */
+
+.balance-grid{
+    display:grid;
+    grid-template-columns:1.25fr 1fr 1fr 1fr;
+    gap:15px;
+    margin-bottom:22px;
+}
+
+.balance-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--shadow);
+    min-width:0;
+}
+
+.balance-card.total{
+    color:#fff;
+    background:linear-gradient(135deg,#07111f,#12345d);
+    border:0;
+    position:relative;
+    overflow:hidden;
+}
+
+.balance-card.total::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    right:-70px;
+    top:-80px;
+    border-radius:50%;
+    background:rgba(23,105,255,.25);
+}
+
+.card-label{
+    position:relative;
+    z-index:2;
+    color:#667085;
+    font-size:12px;
+    font-weight:750;
+    margin-bottom:12px;
+}
+
+.total .card-label{
+    color:#aebbd0;
+}
+
+.total-amount{
+    position:relative;
+    z-index:2;
+    font-size:27px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.currency{
+    font-size:12px;
+    font-weight:750;
+    opacity:.8;
+}
+
+.balance-bottom{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:15px;
+    font-size:11px;
+    color:#aebbd0;
+}
+
+.country{
+    font-weight:900;
+    font-size:12px;
+    color:#344054;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:9px;
+}
+
+.country-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--green);
+}
+
+.country-balance{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-.4px;
+}
+
+/* ================= ACTIONS ================= */
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+}
+
+.btn{
+    border:0;
+    border-radius:12px;
+    padding:12px 17px;
+    font-weight:800;
+    font-size:13px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.btn-primary{
+    color:#fff;
+    background:var(--blue);
+    box-shadow:0 8px 20px rgba(23,105,255,.18);
+}
+
+.btn-primary:hover{
+    background:var(--blue-dark);
+}
+
+.btn-light{
+    color:#344054;
+    background:#fff;
+    border:1px solid var(--line);
+}
+
+.btn-light:hover{
+    background:#f8fafc;
+}
+
+/* ================= STATS ================= */
+
+.section-title{
+    font-size:16px;
+    font-weight:900;
+    margin-bottom:13px;
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:24px;
+}
+
+.stat-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:17px;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#667085;
+    font-size:12px;
+    font-weight:750;
+}
+
+.stat-icon{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:grid;
+    place-items:center;
+    background:#f2f4f7;
+}
+
+.stat-value{
+    margin-top:13px;
+    font-size:22px;
+    font-weight:900;
+}
+
+.stat-change{
+    margin-top:5px;
+    color:var(--green);
+    font-size:11px;
+    font-weight:800;
+}
+
+/* ================= TABLE ================= */
+
+.panels{
+    display:grid;
+    grid-template-columns:1.55fr 1fr;
+    gap:20px;
+}
+
+.panel{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.panel-head{
+    padding:17px 18px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.panel-title{
+    font-size:14px;
+    font-weight:900;
+}
+
+.panel-link{
+    color:var(--blue);
+    font-size:12px;
+    font-weight:800;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:580px;
+}
+
+th,
+td{
+    padding:13px 18px;
+    border-bottom:1px solid #f0f2f5;
+    text-align:left;
+    font-size:12px;
+    white-space:nowrap;
+}
+
+th{
+    color:#98a2b3;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+td{
+    color:#344054;
+    font-weight:650;
+}
+
+.amount{
+    font-weight:900;
+    color:#101828;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 8px;
+    border-radius:8px;
+    font-size:10px;
+    font-weight:850;
+}
+
+.status.success{
+    color:#067647;
+    background:#ecfdf3;
+}
+
+.status.pending{
+    color:#b54708;
+    background:#fffaeb;
+}
+
+.status.failed{
+    color:#b42318;
+    background:#fef3f2;
+}
+
+.status-dot{
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:currentColor;
+}
+
+/* ================= COUNTRIES ================= */
+
+.country-list{
+    padding:5px 18px 15px;
+}
+
+.country-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 0;
+    border-bottom:1px solid #f0f2f5;
+}
+
+.country-row:last-child{
+    border-bottom:0;
+}
+
+.country-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.flag{
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    display:grid;
+    place-items:center;
+    background:#f2f4f7;
+    font-size:16px;
+}
+
+.country-name{
+    font-size:12px;
+    font-weight:850;
+}
+
+.country-code{
+    color:#98a2b3;
+    font-size:10px;
+    margin-top:2px;
+}
+
+.country-right{
+    text-align:right;
+}
+
+.country-right strong{
+    display:block;
+    font-size:12px;
+}
+
+.online{
+    color:var(--green);
+    font-size:9px;
+    font-weight:800;
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+    padding:35px 20px;
+    text-align:center;
+    color:#98a2b3;
+    font-size:12px;
+}
+
+/* ================= MOBILE NAV ================= */
+
+.mobile-nav{
+    display:none;
+}
+
+/* ================= LOADING ================= */
+
+.loading{
+    opacity:.6;
+    pointer-events:none;
+}
+
+.loader{
+    display:inline-block;
+    width:15px;
+    height:15px;
+    border:2px solid rgba(255,255,255,.35);
+    border-top-color:#fff;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1150px){
+    .balance-grid{
+        grid-template-columns:1.5fr 1fr 1fr;
+    }
+
+    .balance-card:last-child{
+        grid-column:span 1;
+    }
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .panels{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:850px){
+    .layout{
+        display:block;
+        width:min(100% - 22px,700px);
+        padding-top:18px;
+        padding-bottom:90px;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .header{
+        height:64px;
+    }
+
+    .header-inner{
+        width:calc(100% - 22px);
+    }
+
+    .merchant-info{
+        display:none;
+    }
+
+    .merchant-mini{
+        padding:4px;
+        border:0;
+    }
+
+    .logout-btn{
+        padding:8px 10px;
+        font-size:11px;
+    }
+
+    .welcome{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:5px;
+    }
+
+    .welcome h1{
+        font-size:25px;
+    }
+
+    .balance-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .balance-card.total{
+        grid-column:span 2;
+    }
+
+    .mobile-nav{
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        z-index:90;
+        display:flex;
+        justify-content:space-around;
+        background:rgba(255,255,255,.97);
+        backdrop-filter:blur(12px);
+        border-top:1px solid var(--line);
+        padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+    }
+
+    .mobile-item{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:3px;
+        color:#98a2b3;
+        font-size:9px;
+        font-weight:800;
+        min-width:55px;
+    }
+
+    .mobile-item.active{
+        color:var(--blue);
+    }
+
+    .mobile-icon{
+        font-size:17px;
+    }
+}
+
+@media(max-width:550px){
+    .balance-grid{
+        grid-template-columns:1fr;
+    }
+
+    .balance-card.total{
+        grid-column:auto;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .stat-card{
+        padding:13px;
+    }
+
+    .stat-value{
+        font-size:18px;
+    }
+
+    .actions{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .actions .btn{
+        width:100%;
+    }
+
+    .actions .btn-primary{
+        grid-column:span 2;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    html{
+        scroll-behavior:auto;
+    }
+
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition:none!important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-inner">
+
+        <a class="logo" href="dashboard.html" aria-label="Goldpay accueil">
+            <span class="robot" aria-hidden="true">🤖</span>
+            <span>Goldpay</span>
+        </a>
+
+        <div class="header-right">
+
+            <div class="merchant-mini">
+                <div class="avatar" id="avatar">G</div>
+
+                <div class="merchant-info">
+                    <span class="merchant-name" id="merchantName">Marchand</span>
+                    <span class="merchant-email" id="merchantEmail">—</span>
+                </div>
+            </div>
+
+            <button class="logout-btn" id="logoutBtn" type="button">
+                Déconnexion
+            </button>
+
+        </div>
+    </div>
+</header>
+
+
+<div class="layout">
+
+    <aside class="sidebar" aria-label="Navigation principale">
+
+        <div class="nav-title">Espace marchand</div>
+
+        <a href="dashboard.html" class="nav-item active">
+            <span class="nav-icon">⌂</span>
+            Tableau de bord
+        </a>
+
+        <a href="payment-links.html" class="nav-item">
+            <span class="nav-icon">↗</span>
+            Liens de paiement
+        </a>
+
+        <a href="payments.html" class="nav-item">
+            <span class="nav-icon">▣</span>
+            Paiements
+        </a>
+
+        <a href="withdrawals.html" class="nav-item">
+            <span class="nav-icon">↘</span>
+            Retraits
+        </a>
+
+        <a href="balances.html" class="nav-item">
+            <span class="nav-icon">◉</span>
+            Soldes
+        </a>
+
+        <div class="nav-title" style="margin-top:12px;">Configuration</div>
+
+        <a href="api.html" class="nav-item">
+            <span class="nav-icon">{ }</span>
+            API & clés
+        </a>
+
+        <a href="telegram.html" class="nav-item">
+            <span class="nav-icon">✈</span>
+            Telegram
+        </a>
+
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            Paramètres
+        </a>
+
+    </aside>
+
+
+    <main class="content">
+
+        <section class="welcome">
+            <div>
+                <h1>Bonjour, <span id="welcomeName">Marchand</span></h1>
+                <p>Voici un aperçu de votre activité Goldpay.</p>
+            </div>
+
+            <div class="date" id="currentDate">—</div>
+        </section>
+
+
+        <!-- SOLDES -->
+
+        <section aria-labelledby="balancesTitle">
+
+            <h2 id="balancesTitle" class="section-title" style="display:none;">
+                Soldes
+            </h2>
+
+            <div class="balance-grid">
+
+                <article class="balance-card total">
+                    <div class="card-label">Solde total disponible</div>
+
+                    <div class="total-amount">
+                        <span id="totalBalance">0</span>
+                        <span class="currency">XOF</span>
+                    </div>
+
+                    <div class="balance-bottom">
+                        <span>4 pays actifs</span>
+                        <span>● Disponible</span>
+                    </div>
+                </article>
+
+
+                <article class="balance-card">
+                    <div class="country">
+                        <span class="country-dot"></span>
+                        Burkina Faso
+                    </div>
+
+                    <div class="country-balance">
+                        <span id="balanceBF">0</span>
+                        <span class="currency">XOF</span>
+                    </div>
+                </article>
+
+
+                <article class="balance-card">
+                    <div class="country">
+                        <span class="country-dot"></span>
+                        Côte d’Ivoire
+                    </div>
+
+                    <div class="country-balance">
+                        <span id="balanceCI">0</span>
+                        <span class="currency">XOF</span>
+                    </div>
+                </article>
+
+
+                <article class="balance-card">
+                    <div class="country">
+                        <span class="country-dot"></span>
+                        Togo
+                    </div>
+
+                    <div class="country-balance">
+                        <span id="balanceTG">0</span>
+                        <span class="currency">XOF</span>
+                    </div>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <a href="payment-links.html" class="btn btn-primary">
+                ＋ Créer un lien de paiement
+            </a>
+
+            <a href="withdrawals.html" class="btn btn-light">
+                ↘ Effectuer un retrait
+            </a>
+
+            <a href="payments.html" class="btn btn-light">
+                ▣ Voir les paiements
+            </a>
+
+            <a href="api.html" class="btn btn-light">
+                { } API
+            </a>
+
+        </div>
+
+
+        <!-- STATISTIQUES -->
+
+        <section aria-labelledby="statsTitle">
+
+            <h2 id="statsTitle" class="section-title">
+                Activité
+            </h2>
+
+            <div class="stats-grid">
+
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Paiements aujourd’hui</span>
+                        <span class="stat-icon">↗</span>
+                    </div>
+
+                    <div class="stat-value" id="todayPayments">
+                        0 XOF
+                    </div>
+
+                    <div class="stat-change">
+                        Transactions reçues
+                    </div>
+                </article>
+
+
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Paiements</span>
+                        <span class="stat-icon">▣</span>
+                    </div>
+
+                    <div class="stat-value" id="paymentCount">
+                        0
+                    </div>
+
+                    <div class="stat-change">
+                        Total des transactions
+                    </div>
+                </article>
+
+
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Retraits</span>
+                        <span class="stat-icon">↘</span>
+                    </div>
+
+                    <div class="stat-value" id="withdrawalCount">
+                        0
+                    </div>
+
+                    <div class="stat-change">
+                        Demandes effectuées
+                    </div>
+                </article>
+
+
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Liens actifs</span>
+                        <span class="stat-icon">🔗</span>
+                    </div>
+
+                    <div class="stat-value" id="linkCount">
+                        0
+                    </div>
+
+                    <div class="stat-change">
+                 Liens de paiement
+                    </div>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- PANELS -->
+
+        <div class="panels">
+
+            <!-- PAIEMENTS -->
+
+            <section class="panel" aria-labelledby="recentPaymentsTitle">
+
+                <div class="panel-head">
+                    <h2 id="recentPaymentsTitle" class="panel-title">
+                        Paiements récents
+                    </h2>
+
+                    <a href="payments.html" class="panel-link">
+                        Tout voir
+                    </a>
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Pays</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="paymentsTable">
+                            <tr>
+                                <td colspan="4">
+                                    <div class="empty">
+                                        Aucun paiement pour le moment.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- PAYS -->
+
+            <section class="panel" aria-labelledby="countriesTitle">
+
+                <div class="panel-head">
+                    <h2 id="countriesTitle" class="panel-title">
+                        Soldes par pays
+                    </h2>
+
+                    <a href="balances.html" class="panel-link">
+                        Détails
+                    </a>
+                </div>
+
+
+                <div class="country-list">
+
+                    <div class="country-row">
+                        <div class="country-left">
+                            <div class="flag">🇧🇫</div>
+
+                            <div>
+                                <div class="country-name">
+                                    Burkina Faso
+                                </div>
+                                <div class="country-code">
+                                    BF · XOF
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="country-right">
+                            <strong>
+                                <span id="countryBF">0</span> XOF
+                            </strong>
+                            <span class="online">Actif</span>
+                        </div>
+                    </div>
+
+
+                    <div class="country-row">
+                        <div class="country-left">
+                            <div class="flag">🇨🇮</div>
+
+                            <div>
+                                <div class="country-name">
+                                    Côte d’Ivoire
+                                </div>
+                                <div class="country-code">
+                                    CI · XOF
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="country-right">
+                            <strong>
+                                <span id="countryCI">0</span> XOF
+                            </strong>
+                            <span class="online">Actif</span>
+                        </div>
+                    </div>
+
+
+                    <div class="country-row">
+                        <div class="country-left">
+                            <div class="flag">🇹🇬</div>
+
+                            <div>
+                                <div class="country-name">
+                                    Togo
+                                </div>
+                                <div class="country-code">
+                                    TG · XOF
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="country-right">
+                            <strong>
+                                <span id="countryTG">0</span> XOF
+                            </strong>
+                            <span class="online">Actif</span>
+                        </div>
+                    </div>
+
+
+                    <div class="country-row">
+                        <div class="country-left">
+                            <div class="flag">🇧🇯</div>
+
+                            <div>
+                                <div class="country-name">
+                                    Bénin
+                                </div>
+                                <div class="country-code">
+                                    BJ · XOF
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="country-right">
+                            <strong>
+                                <span id="countryBJ">0</span> XOF
+                            </strong>
+                            <span class="online">Actif</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RETRAITS -->
+
+            <section class="panel" aria-labelledby="withdrawalsTitle">
+
+                <div class="panel-head">
+                    <h2 id="withdrawalsTitle" class="panel-title">
+                        Retraits récents
+                    </h2>
+
+                    <a href="withdrawals.html" class="panel-link">
+                        Tout voir
+                    </a>
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="withdrawalsTable">
+                            <tr>
+                                <td colspan="3">
+                                    <div class="empty">
+                                        Aucun retrait pour le moment.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- TELEGRAM -->
+
+            <section class="panel" aria-labelledby="telegramTitle">
+
+                <div class="panel-head">
+                    <h2 id="telegramTitle" class="panel-title">
+                        Notifications Telegram
+                    </h2>
+                </div>
+
+                <div style="padding:20px;">
+
+                    <div style="
+                        background:#f2f7ff;
+                        border:1px solid #dce9ff;
+                        border-radius:14px;
+                        padding:16px;
+                    ">
+
+                        <div style="
+                            font-size:25px;
+                            margin-bottom:9px;
+                        ">✈</div>
+
+                        <strong style="
+                            display:block;
+                            font-size:13px;
+                            margin-bottom:6px;
+                        ">
+                            Groupe Telegram marchand
+                        </strong>
+
+                        <p style="
+                            color:#667085;
+                            font-size:11px;
+                            line-height:1.6;
+                            margin-bottom:13px;
+                        ">
+                            Les codes de connexion et les notifications
+                            importantes de votre activité seront envoyés
+                            automatiquement dans votre groupe Telegram.
+                        </p>
+
+                        <a href="telegram.html" class="btn btn-light">
+                            Configurer Telegram
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- NAVIGATION MOBILE -->
+
+<nav class="mobile-nav" aria-label="Navigation mobile">
+
+    <a href="dashboard.html" class="mobile-item active">
+        <span class="mobile-icon">⌂</span>
+        Accueil
+    </a>
+
+    <a href="payment-links.html" class="mobile-item">
+        <span class="mobile-icon">↗</span>
+        Liens
+    </a>
+
+    <a href="payments.html" class="mobile-item">
+        <span class="mobile-icon">▣</span>
+        Paiements
+    </a>
+
+    <a href="withdrawals.html" class="mobile-item">
+        <span class="mobile-icon">↘</span>
+        Retraits
+    </a>
+
+    <a href="settings.html" class="mobile-item">
+        <span class="mobile-icon">⚙</span>
+        Profil
+    </a>
+
+</nav>
+
+
+<script>
+"use strict";
+
+const SUPABASE_URL =
+    "https://autcbkafczthxcyjkobf.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "REMPLACE_PAR_TA_CLE_ANON_PUBLIQUE";
+
+const SESSION_KEY = "goldpay_session";
+
+
+function money(value){
+    return new Intl.NumberFormat("fr-FR").format(
+        Number(value || 0)
+    );
+}
+
+
+function getSession(){
+    try{
+        return JSON.parse(
+            localStorage.getItem(SESSION_KEY) || "null"
+        );
+    }catch{
+        return null;
+    }
+}
+
+
+function logout(){
+    localStorage.removeItem(SESSION_KEY);
+    window.location.href = "login.html";
+}
+
+
+function requireSession(){
+    const session = getSession();
+
+    if(!session || !session.token){
+        window.location.href = "login.html";
+        return null;
+    }
+
+    return session;
+}
+
+
+function authHeaders(){
+    const session = getSession();
+
+    return {
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_ANON_KEY,
+        "Authorization":"Bearer " + session.token
+    };
+}
+
+
+async function supabaseGet(table, query=""){
+    const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/${table}?${query}`,
+        {
+            headers:authHeaders()
+        }
+    );
+
+    if(!response.ok){
+        throw new Error(
+            `Erreur ${response.status}`
+        );
+    }
+
+    return response.json();
+}
+
+
+function formatReference(id){
+    if(!id) return "—";
+
+    const text = String(id);
+
+    if(text.length <= 12){
+        return text;
+    }
+
+    return text.substring(0,8) + "…";
+}
+
+
+function statusHTML(status){
+    const s = String(status || "").toLowerCase();
+
+    if(
+        s === "completed" ||
+        s === "success" ||
+        s === "paid"
+    ){
+        return `
+            <span class="status success">
+                <span class="status-dot"></span>
+                Réussi
+            </span>
+        `;
+    }
+
+    if(
+        s === "pending" ||
+        s === "processing"
+    ){
+        return `
+            <span class="status pending">
+                <span class="status-dot"></span>
+                En attente
+            </span>
+        `;
+    }
+
+    return `
+        <span class="status failed">
+            <span class="status-dot"></span>
+            Échec
+        </span>
+    `;
+}
+
+
+function updateMerchantInfo(session){
+
+    const merchant =
+        session.merchant ||
+        session.user ||
+        {};
+
+    const name =
+        merchant.slug ||
+        session.slug ||
+        "Marchand";
+
+    const email =
+        merchant.email ||
+        session.email ||
+        "—";
+
+    document.getElementById("merchantName")
+        .textContent = name;
+
+    document.getElementById("merchantEmail")
+        .textContent = email;
+
+    document.getElementById("welcomeName")
+        .textContent = name;
+
+    document.getElementById("avatar")
+        .textContent =
+        String(name).charAt(0).toUpperCase();
+}
+
+
+function updateDate(){
+
+    const date = new Intl.DateTimeFormat(
+        "fr-FR",
+        {
+            weekday:"long",
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        }
+    ).format(new Date());
+
+    document.getElementById("currentDate")
+        .textContent =
+        date.charAt(0).toUpperCase() + date.slice(1);
+}
+
+
+async function loadBalances(merchantId){
+
+    try{
+
+        const rows = await supabaseGet(
+            "merchant_balances",
+            `merchant_id=eq.${encodeURIComponent(merchantId)}&select=country_code,balance`
+        );
+
+        const balances = {
+            BF:0,
+            CI:0,
+            TG:0,
+            BJ:0
+        };
+
+        rows.forEach(row => {
+            if(
+                Object.prototype.hasOwnProperty.call(
+                    balances,
+                    row.country_code
+                )
+            ){
+                balances[row.country_code] =
+                    Number(row.balance || 0);
+            }
+        });
+
+        const total =
+            balances.BF +
+            balances.CI +
+            balances.TG +
+            balances.BJ;
+
+        document.getElementById("totalBalance")
+            .textContent = money(total);
+
+        document.getElementById("balanceBF")
+            .textContent = money(balances.BF);
+
+        document.getElementById("balanceCI")
+            .textContent = money(balances.CI);
+
+        document.getElementById("balanceTG")
+            .textContent = money(balances.TG);
+
+        document.getElementById("countryBF")
+            .textContent = money(balances.BF);
+
+        document.getElementById("countryCI")
+            .textContent = money(balances.CI);
+
+        document.getElementById("countryTG")
+            .textContent = money(balances.TG);
+
+        document.getElementById("countryBJ")
+            .textContent = money(balances.BJ);
+
+    }catch(error){
+
+        console.error(
+            "Erreur chargement soldes:",
+            error
+        );
+    }
+}
+
+
+async function loadPayments(merchantId){
+
+    try{
+
+        const rows = await supabaseGet(
+            "payments",
+            `merchant_id=eq.${encodeURIComponent(merchantId)}&select=*&order=created_at.desc&limit=5`
+        );
+
+        document.getElementById("paymentCount")
+            .textContent = money(rows.length);
+
+        const tbody =
+            document.getElementById("paymentsTable");
+
+        if(!rows.length){
+            return;
+        }
+
+        tbody.innerHTML = rows.map(row => {
+
+            return `
+                <tr>
+                    <td>
+                        ${formatReference(
+                            row.id ||
+                            row.reference ||
+                            row.transaction_id
+                        )}
+                    </td>
+
+                    <td>
+                        ${row.country_code || "—"}
+                    </td>
+
+                    <td class="amount">
+                        ${money(row.amount)} XOF
+                    </td>
+
+                    <td>
+                        ${statusHTML(row.status)}
+                    </td>
+                </tr>
+            `;
+
+        }).join("");
+
+        const today =
+            new Date().toISOString().slice(0,10);
+
+        const todayRows =
+            rows.filter(row =>
+                String(row.created_at || "")
+                    .startsWith(today)
+            );
+
+        const todayAmount =
+            todayRows.reduce(
+                (sum,row) =>
+                    sum + Number(row.amount || 0),
+                0
+            );
+
+        document.getElementById("todayPayments")
+            .textContent =
+            money(todayAmount) + " XOF";
+
+    }catch(error){
+
+        console.error(
+            "Erreur paiements:",
+            error
+        );
+    }
+}
+
+
+async function loadWithdrawals(merchantId){
+
+    try{
+
+        const rows = await supabaseGet(
+            "withdrawals",
+            `merchant_id=eq.${encodeURIComponent(merchantId)}&select=*&order=created_at.desc&limit=5`
+        );
+
+        document.getElementById("withdrawalCount")
+            .textContent = money(rows.length);
+
+        const tbody =
+            document.getElementById("withdrawalsTable");
+
+        if(!rows.length){
+            return;
+        }
+
+        tbody.innerHTML = rows.map(row => {
+
+            return `
+                <tr>
+                    <td>
+                        ${formatReference(
+                            row.id ||
+                            row.reference ||
+                            row.transaction_id
+                        )}
+                    </td>
+
+                    <td class="amount">
+                        ${money(row.amount)} XOF
+                    </td>
+
+                    <td>
+                        ${statusHTML(row.status)}
+                    </td>
+                </tr>
+            `;
+
+        }).join("");
+
+    }catch(error){
+
+        console.error(
+            "Erreur retraits:",
+            error
+        );
+    }
+}
+
+
+async function loadPaymentLinks(merchantId){
+
+    try{
+
+        const rows = await supabaseGet(
+            "payment_links",
+            `merchant_id=eq.${encodeURIComponent(merchantId)}&select=id`
+        );
+
+        document.getElementById("linkCount")
+            .textContent = money(rows.length);
+
+    }catch(error){
+
+        console.error(
+            "Erreur liens:",
+            error
+        );
+    }
+}
+
+
+async function loadDashboard(){
+
+    const session =
+        requireSession();
+
+    if(!session){
+        return;
+    }
+
+    updateMerchantInfo(session);
+    updateDate();
+
+    const merchantId =
+        session.merchant_id ||
+        session.merchantId ||
+        session.merchant?.id ||
+        session.user?.id;
+
+    if(!merchantId){
+        console.warn(
+            "merchant_id absent de la session."
+        );
+        return;
+    }
+
+    await Promise.all([
+        loadBalances(merchantId),
+        loadPayments(merchantId),
+        loadWithdrawals(merchantId),
+        loadPaymentLinks(merchantId)
+    ]);
+}
+
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+loadDashboard();
+</script>
+
+</body>
+  </html>
+  
