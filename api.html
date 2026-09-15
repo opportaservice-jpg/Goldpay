@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldpay — API & Clés</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f6f8;
+    color:#111827;
+}
+
+.header{
+    height:64px;
+    background:#111827;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:700;
+}
+
+.logout{
+    border:1px solid #374151;
+    background:transparent;
+    color:#fff;
+    padding:9px 14px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:28px 18px 50px;
+}
+
+.title{
+    margin-bottom:22px;
+}
+
+.title h1{
+    font-size:28px;
+    margin-bottom:7px;
+}
+
+.title p{
+    color:#6b7280;
+    font-size:14px;
+}
+
+.card{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:18px;
+}
+
+.card h2{
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.card-description{
+    color:#6b7280;
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:20px;
+}
+
+.form{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:12px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-size:14px;
+}
+
+button{
+    font-family:inherit;
+}
+
+.primary{
+    border:0;
+    background:#111827;
+    color:#fff;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.keys{
+    display:grid;
+    gap:12px;
+}
+
+.key{
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:17px;
+}
+
+.key-top{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.prefix{
+    font-weight:700;
+    font-family:monospace;
+    font-size:15px;
+}
+
+.badge{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.badge.active{
+    background:#ecfdf5;
+    color:#047857;
+}
+
+.badge.revoked{
+    background:#fef2f2;
+    color:#b91c1c;
+}
+
+.key-details{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.label{
+    color:#6b7280;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.value{
+    font-size:13px;
+    font-weight:600;
+    word-break:break-word;
+}
+
+.revoke{
+    margin-top:16px;
+    border:1px solid #fecaca;
+    background:#fff;
+    color:#b91c1c;
+    padding:8px 12px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.empty,
+.loading,
+.error{
+    text-align:center;
+    padding:35px 15px;
+    color:#6b7280;
+}
+
+.error{
+    color:#b91c1c;
+}
+
+.secret-box{
+    display:none;
+    margin-top:20px;
+    background:#f9fafb;
+    border:1px solid #d1d5db;
+    border-radius:9px;
+    padding:16px;
+}
+
+.secret-box strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.secret{
+    display:block;
+    font-family:monospace;
+    background:#111827;
+    color:#fff;
+    padding:12px;
+    border-radius:7px;
+    word-break:break-all;
+    margin-bottom:10px;
+}
+
+.warning{
+    font-size:12px;
+    color:#92400e;
+    line-height:1.5;
+}
+
+.copy{
+    border:1px solid #d1d5db;
+    background:#fff;
+    padding:8px 12px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+@media(max-width:700px){
+    .header{
+        padding:0 15px;
+    }
+
+    .container{
+        padding:22px 12px 40px;
+    }
+
+    .title h1{
+        font-size:24px;
+    }
+
+    .form{
+        grid-template-columns:1fr;
+    }
+
+    .primary{
+        width:100%;
+    }
+
+    .key-top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .key-details{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">Goldpay</div>
+    <button class="logout" id="logoutBtn">
+        Déconnexion
+    </button>
+</header>
+
+<main class="container">
+
+    <div class="title">
+        <h1>API & clés</h1>
+        <p>
+            Gérez les identifiants permettant à votre serveur
+            de communiquer avec Goldpay.
+        </p>
+    </div>
+
+    <section class="card">
+
+        <h2>Créer une clé API</h2>
+
+        <p class="card-description">
+            Une clé API permet à votre serveur d'utiliser les
+            services Goldpay. Ne partagez jamais votre clé secrète.
+        </p>
+
+        <div class="form">
+            <input
+                type="text"
+                id="keyName"
+                placeholder="Nom de la clé, exemple : Production"
+                maxlength="100"
+            >
+
+            <button
+                class="primary"
+                id="createBtn"
+            >
+                Créer une clé
+            </button>
+        </div>
+
+        <div
+            class="secret-box"
+            id="secretBox"
+        >
+            <strong>Votre clé secrète</strong>
+
+            <span
+                class="secret"
+                id="secretValue"
+            ></span>
+
+            <button
+                class="copy"
+                id="copySecret"
+            >
+                Copier
+            </button>
+
+            <p class="warning">
+                Cette clé secrète ne sera affichée qu'une seule fois.
+                Conservez-la dans un endroit sécurisé.
+            </p>
+        </div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>Mes clés API</h2>
+
+        <p class="card-description">
+            Les clés actives peuvent être utilisées par votre
+            intégration. Une clé révoquée ne doit plus être utilisée.
+        </p>
+
+        <div id="keysContainer">
+            <div class="loading">
+                Chargement...
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+"use strict";
+
+/*
+ * Goldpay API
+ * La clé API secrète n'est jamais stockée en clair
+ * dans le navigateur après sa création.
+ */
+
+const SUPABASE_URL =
+    "https://autcbkafczthxcyjkobf.supabase.co";
+
+const API_BASE =
+    SUPABASE_URL + "/functions/v1";
+
+const keysContainer =
+    document.getElementById("keysContainer");
+
+const createBtn =
+    document.getElementById("createBtn");
+
+const keyName =
+    document.getElementById("keyName");
+
+const secretBox =
+    document.getElementById("secretBox");
+
+const secretValue =
+    document.getElementById("secretValue");
+
+const copySecret =
+    document.getElementById("copySecret");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+
+/* ================================
+   SESSION
+================================ */
+
+function getToken(){
+
+    const possible = [
+        "goldpay_session",
+        "goldpay_token",
+        "gp_session",
+        "gp_token",
+        "session_token",
+        "merchant_session_token"
+    ];
+
+    for(const key of possible){
+
+        const value =
+            localStorage.getItem(key);
+
+        if(
+            typeof value === "string" &&
+            value.startsWith("gp_")
+        ){
+            return value;
+        }
+
+        if(value){
+
+            try{
+
+                const obj =
+                    JSON.parse(value);
+
+                const candidates = [
+                    obj?.token,
+                    obj?.session_token,
+                    obj?.access_token
+                ];
+
+                for(const token of candidates){
+
+                    if(
+                        typeof token === "string" &&
+                        token.startsWith("gp_")
+                    ){
+                        return token;
+                    }
+                }
+
+            }catch(e){}
+        }
+    }
+
+    for(let i=0;i<localStorage.length;i++){
+
+        const key =
+            localStorage.key(i);
+
+        if(!key) continue;
+
+        const value =
+            localStorage.getItem(key);
+
+        if(
+            typeof value === "string" &&
+            value.startsWith("gp_")
+        ){
+            return value;
+        }
+    }
+
+    return null;
+}
+
+
+/* ================================
+   LOGIN
+================================ */
+
+function requireSession(){
+
+    const token = getToken();
+
+    if(!token){
+
+        window.location.href =
+            "login.html";
+
+        return null;
+    }
+
+    return token;
+}
+
+
+/* ================================
+   ESCAPE HTML
+================================ */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+/* ================================
+   DATE
+================================ */
+
+function formatDate(value){
+
+    if(!value) return "—";
+
+    const date =
+        new Date(value);
+
+    if(Number.isNaN(date.getTime())){
+        return "—";
+    }
+
+    return date.toLocaleString(
+        "fr-FR",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
+}
+
+
+/* ================================
+   CHARGER LES CLÉS
+================================ */
+
+async function loadKeys(){
+
+    const token =
+        requireSession();
+
+    if(!token) return;
+
+    keysContainer.innerHTML = `
+        <div class="loading">
+            Chargement...
+        </div>
+    `;
+
+    try{
+
+        /*
+         * Cette route devra être fournie par
+         * l'Edge Function de gestion des clés.
+         */
+
+        const response =
+            await fetch(
+                API_BASE + "/merchant-api-credentials",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json",
+                        "Authorization":
+                            "Bearer " + token
+                    },
+                    body:JSON.stringify({
+                        action:"list"
+                    })
+                }
+            );
+
+        let data = null;
+
+        try{
+            data = await response.json();
+        }catch(e){}
+
+
+        if(response.status === 401){
+
+            logout();
+            return;
+        }
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data?.error ||
+                "Impossible de charger les clés API."
+            );
+        }
+
+
+        const keys =
+            Array.isArray(data?.keys)
+                ? data.keys
+                : [];
+
+
+        if(keys.length === 0){
+
+            keysContainer.innerHTML = `
+                <div class="empty">
+                    Aucune clé API créée.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        keysContainer.innerHTML =
+            `<div class="keys">
+                ${keys.map(renderKey).join("")}
+            </div>`;
+
+
+        document
+            .querySelectorAll("[data-revoke]")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    () => revokeKey(
+                        button.dataset.revoke
+                    )
+                );
+
+            });
+
+    }catch(error){
+
+        console.error(error);
+
+        keysContainer.innerHTML = `
+            <div class="error">
+                ${escapeHTML(
+                    error.message ||
+                    "Erreur de chargement."
+                )}
+
+                <br><br>
+
+                <button
+                    class="copy"
+                    onclick="loadKeys()"
+                >
+                    Réessayer
+                </button>
+            </div>
+        `;
+    }
+}
+
+
+/* ================================
+   AFFICHAGE CLÉ
+================================ */
+
+function renderKey(key){
+
+    const active =
+        key.active === true &&
+        !key.revoked_at;
+
+    return `
+        <div class="key">
+
+            <div class="key-top">
+
+                <div class="prefix">
+                    ${escapeHTML(
+                        key.api_key_prefix ||
+                        "Clé API"
+                    )}
+                </div>
+
+                <span class="badge ${
+                    active ? "active" : "revoked"
+                }">
+                    ${
+                        active
+                            ? "ACTIVE"
+                            : "RÉVOQUÉE"
+                    }
+                </span>
+
+            </div>
+
+            <div class="key-details">
+
+                <div>
+                    <div class="label">
+                        Créée le
+                    </div>
+
+                    <div class="value">
+                        ${formatDate(
+                            key.created_at
+                        )}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="label">
+                        Dernière utilisation
+                    </div>
+
+                    <div class="value">
+                        ${formatDate(
+                            key.last_used_at
+                        )}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="label">
+                        Identifiant
+                    </div>
+
+                    <div class="value">
+                        ${escapeHTML(
+                            key.id || "—"
+                        )}
+                    </div>
+                </div>
+
+            </div>
+
+            ${
+                active
+                    ? `
+                    <button
+                        class="revoke"
+                        data-revoke="${escapeHTML(key.id)}"
+                    >
+                        Révoquer cette clé
+                    </button>
+                    `
+                    : ""
+            }
+
+        </div>
+    `;
+}
+
+
+/* ================================
+   CRÉER UNE CLÉ
+================================ */
+
+createBtn.addEventListener(
+    "click",
+    createKey
+);
+
+
+async function createKey(){
+
+    const token =
+        requireSession();
+
+    if(!token) return;
+
+
+    const name =
+        keyName.value.trim();
+
+
+    if(!name){
+
+        alert(
+            "Veuillez donner un nom à la clé."
+        );
+
+        keyName.focus();
+
+        return;
+    }
+
+
+    createBtn.disabled = true;
+
+    createBtn.textContent =
+        "Création...";
+
+
+    secretBox.style.display =
+        "none";
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/merchant-api-credentials",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                            "application/json",
+                        "Authorization":
+                            "Bearer " + token
+                    },
+                    body:JSON.stringify({
+                        action:"create",
+                        name:name
+                    })
+                }
+            );
+
+
+        let data = null;
+
+        try{
+            data = await response.json();
+        }catch(e){}
+
+
+        if(response.status === 401){
+
+            logout();
+            return;
+        }
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data?.error ||
+                "Impossible de créer la clé."
+            );
+        }
+
+
+        const secret =
+            data?.api_secret ||
+            data?.secret ||
+            "";
+
+
+        if(!secret){
+
+            throw new Error(
+                "La clé a été créée mais le secret n'a pas été retourné."
+            );
+        }
+
+
+        secretValue.textContent =
+            secret;
+
+        secretBox.style.display =
+            "block";
+
+        keyName.value = "";
+
+
+        await loadKeys();
+
+
+    }catch(error){
+
+        alert(
+            error.message ||
+            "Erreur lors de la création."
+        );
+
+    }finally{
+
+        createBtn.disabled = false;
+
+        createBtn.textContent =
+            "Créer une clé";
+    }
+}
+
+
+/* ================================
+   RÉVOQUER
+================================ */
+
+async function revokeKey(id){
+
+    const token =
+        requireSession();
+
+    if(!token) return;
+
+
+    if(!confirm(
+        "Voulez-vous vraiment révoquer cette clé API ?"
+    )){
+        return;
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/merchant-api-credentials",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                            "application/json",
+                        "Authorization":
+                            "Bearer " + token
+                    },
+                    body:JSON.stringify({
+                        action:"revoke",
+                        id:id
+                    })
+                }
+            );
+
+
+        let data = null;
+
+        try{
+            data = await response.json();
+        }catch(e){}
+
+
+        if(response.status === 401){
+
+            logout();
+            return;
+        }
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data?.error ||
+                "Impossible de révoquer la clé."
+            );
+        }
+
+
+        await loadKeys();
+
+    }catch(error){
+
+        alert(
+            error.message ||
+            "Erreur lors de la révocation."
+        );
+    }
+}
+
+
+/* ================================
+   COPIER SECRET
+================================ */
+
+copySecret.addEventListener(
+    "click",
+    async () => {
+
+        const value =
+            secretValue.textContent;
+
+        if(!value) return;
+
+        try{
+
+            await navigator.clipboard.writeText(
+                value
+            );
+
+            copySecret.textContent =
+                "Copié";
+
+            setTimeout(() => {
+                copySecret.textContent =
+                    "Copier";
+            },1500);
+
+        }catch(error){
+
+            alert(
+                "Impossible de copier automatiquement."
+            );
+        }
+    }
+);
+
+
+/* ================================
+   DÉCONNEXION
+================================ */
+
+function logout(){
+
+    [
+        "goldpay_session",
+        "goldpay_token",
+        "gp_session",
+        "gp_token",
+        "session_token",
+        "merchant_session_token"
+    ].forEach(key => {
+        localStorage.removeItem(key);
+    });
+
+    window.location.href =
+        "login.html";
+}
+
+
+logoutBtn.addEventListener(
+    "click",
+    logout
+);
+
+
+/* ================================
+   DÉMARRAGE
+================================ */
+
+loadKeys();
+</script>
+
+</body>
+</html>
